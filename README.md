@@ -8,7 +8,10 @@
 
 1. Clone the repository:
 ```bash
-git clone <repo>
+https:
+git clone https://github.com/manontheluna/CST336-final-project.git
+ssh
+git clone git@github.com:manontheluna/CST336-final-project.git
 ```
 2. Install dependencies:
 ```bash
