@@ -1,14 +1,10 @@
 # CST336 - Final Project
 
 ## Requirements
----
 
 - Node.js 20+
 
----
-
 ## Development
----
 
 1. Clone the repository:
 ```bash
@@ -22,10 +18,8 @@ npm install
 ```bash
 npm run dev
 ```
----
 
 ## Development Notes
----
 
 ### ESLint
 
@@ -53,7 +47,6 @@ npm run lint:fix
 
 Please run `npm run lint` before submitting changes to ensure the project follows the configured ESLint rules.
 
----
 
 ### EJS Layout Convention
 
@@ -101,7 +94,6 @@ Example page file:
 </div>
 ```
 
----
 
 ### Rendering Pages
 
