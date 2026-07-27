@@ -52,16 +52,37 @@ async function handleRecipeSearch(event) {
     }
 }
 
-async function fetchRecipes(ingredient) {
-  // Temporary sample data
-  return [
-    {
-      name: `${ingredient} Recipe`,
-      category: "Sample Category",
-      image: "https://placehold.co/250x150",
-      instructions: "Sample preparation instructions."
+async function fetchRecipes(ingredients) {
+    const encodedIngredients = encodeURIComponent(ingredients)
+
+    const response = await fetch(
+        `/api/spoonacular-recipes?ingredients=${encodedIngredients}`
+    )
+
+    if (!response.ok) {
+        throw new Error('Recipe search failed.')
     }
-  ];
+
+    const recipes = await response.json()
+
+    return recipes.map(function (recipe) {
+        const missingIngredients = recipe.missedIngredients.map(
+            function (ingredient) {
+                return ingredient.name
+            }
+        )
+
+        return {
+            id: recipe.id,
+            name: recipe.title,
+            image: recipe.image,
+            category:
+                `Uses ${recipe.usedIngredientCount} entered ingredient(s)`,
+            instructions: missingIngredients.length
+                ? `You may also need: ${missingIngredients.join(', ')}`
+                : 'No additional ingredients are listed.'
+        }
+    })
 }
 
 function displayRecipes(recipes) {
