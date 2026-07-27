@@ -85,6 +85,13 @@ app.get('/api/ingredients', async(req, res) => {
     `
     const [rows] = await db.query(query)
     res.send(rows)
+
+})
+
+app.get('/recipes', (req, res) => {
+    res.render('layout', {
+        content: 'recipes'
+    })
 })
 
 // used for vercel deployment, local development uses port 3000
