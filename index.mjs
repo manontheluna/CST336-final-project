@@ -52,6 +52,25 @@ app.get('/api/recipes', async(req, res) => {
     res.send(rows)
 })
 
+// get user by id
+app.get('/api/user/:id', async(req, res) => {
+    const id = req.params.id
+    const query = `
+        SELECT * FROM fp_users WHERE id = ?
+    `
+    const [rows] = await db.query(query, [id])
+    res.send(rows)
+})
+
+app.get('/api/recipe/:id', async(req, res) => {
+    const id = req.params.id
+    const query = `
+        SELECT * FROM fp_recipes WHERE id = ?
+    `
+    const [rows] = await db.query(query, [id])
+    res.send(rows)
+})
+
 // used for vercel deployment, local development uses port 3000
 // otherwise let vercel handle environment
 if (process.env.VERCEL !== '1') {
