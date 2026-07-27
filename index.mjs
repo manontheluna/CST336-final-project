@@ -53,7 +53,7 @@ app.get('/api/recipes', async(req, res) => {
 })
 
 // get user by id
-app.get('/api/user/:id', async(req, res) => {
+app.get('/api/users/:id', async(req, res) => {
     const id = req.params.id
     const query = `
         SELECT * FROM fp_users WHERE id = ?
@@ -62,13 +62,30 @@ app.get('/api/user/:id', async(req, res) => {
     res.send(rows)
 })
 
-app.get('/api/recipe/:id', async(req, res) => {
+app.get('/api/recipes/:id', async(req, res) => {
     const id = req.params.id
     const query = `
         SELECT * FROM fp_recipes WHERE id = ?
     `
     const [rows] = await db.query(query, [id])
     res.send(rows)
+})
+
+app.get('/api/categories', async(req, res) => {
+    const query = `
+        SELECT * FROM fp_categories
+    `
+    const [rows] = await db.query(query)
+    res.send(rows)
+})
+
+app.get('/api/ingredients', async(req, res) => {
+    const query = `
+        SELECT * FROM fp_ingredients
+    `
+    const [rows] = await db.query(query)
+    res.send(rows)
+
 })
 
 app.get('/recipes', (req, res) => {
