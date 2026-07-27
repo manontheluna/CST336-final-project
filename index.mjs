@@ -71,6 +71,12 @@ app.get('/api/recipe/:id', async(req, res) => {
     res.send(rows)
 })
 
+app.get('/recipes', (req, res) => {
+    res.render('layout', {
+        content: 'recipes'
+    })
+})
+
 // used for vercel deployment, local development uses port 3000
 // otherwise let vercel handle environment
 if (process.env.VERCEL !== '1') {
