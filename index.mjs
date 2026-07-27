@@ -1,8 +1,10 @@
 import 'dotenv/config'
 import express from 'express'
-import mysql from 'mysql2/promise'
+import { db } from './db/db.mjs'
 import path from 'path'
 import { fileURLToPath } from 'url'
+
+import { registerUser } from './public/js/auth-api.mjs'
 
 const PORT = process.env.PORT || 3000
 
@@ -13,16 +15,8 @@ const __dirname = path.dirname(__filename)
 app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'ejs')
 app.use(express.static(path.join(__dirname, 'public')))
-
-const db = mysql.createPool({
-    host: process.env.DB_HOST,
-    port: process.env.DB_PORT,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-    connectionLimit: 10,
-    waitForConnections: true
-})
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
 
 app.get('/', (req, res) => {
     res.render('layout', {
@@ -33,6 +27,12 @@ app.get('/', (req, res) => {
 app.get('/login', (req, res) => {
     res.render('layout', {
         content: 'login'
+    })
+})
+
+app.get('/register', (req, res) => {
+    res.render('layout', {
+        content: 'register'
     })
 })
 
@@ -128,6 +128,9 @@ app.get('/api/spoonacular-recipes', async(req, res) => {
         })
     }
 })
+
+// post requests
+app.post('/register', registerUser)
 
 // used for vercel deployment, local development uses port 3000
 // otherwise let vercel handle environment
