@@ -33,10 +33,20 @@ export async function loginUser(req, res) {
             return res.status(401).send('Invalid email or password')
         }
         const user = rows[0]
+        // verify password
         const passwordMatch = await bcrypt.compare(password, user.password_hash)
         if (!passwordMatch) {
             return res.status(401).send('Invalid email or password')
         }
+        // user authenticated here, create/store user
+        req.session.user = {
+            id: user.id,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email,
+            isAdmin: user.isAdmin
+        }
+        
         res.redirect('/dashboard')
     } catch (error) {
         console.error(error)

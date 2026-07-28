@@ -1,5 +1,6 @@
 import 'dotenv/config'
 import express from 'express'
+import session from 'express-session'
 import { db } from './db/db.mjs'
 import path from 'path'
 import { fileURLToPath } from 'url'
@@ -17,6 +18,28 @@ app.set('view engine', 'ejs')
 app.use(express.static(path.join(__dirname, 'public')))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
+app.use(session({
+    secret: process.env.SESSION_KEY,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        maxAge: 1000 * 60 * 60 * 24 // store user login session for 1 day
+    }
+}))
+
+// make user available globally
+app.use((req, res, next) => {
+    res.locals.user = req.session.user
+    next()
+})
+
+// helper function for keeping track of logged in user
+function requireLogin(req, res, next) {
+    if (!req.session.user) {
+        return res.redirect('/login')
+    }
+    next()
+}
 
 app.get('/', (req, res) => {
     res.render('layout', {
@@ -36,7 +59,7 @@ app.get('/register', (req, res) => {
     })
 })
 
-app.get('/dashboard', (req, res) => {
+app.get('/dashboard', requireLogin, (req, res) => {
     res.render('layout', {
         content: 'dashboard'
     })
