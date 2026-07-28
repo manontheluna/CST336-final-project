@@ -1,0 +1,17 @@
+<section class="recipes-page">
+    <h1>Find Recipes</h1>
+
+    <form id="recipe-form">
+        <label for="recipe-search">Enter ingredients separated by commas:</label>
+
+        <input type="text" id="recipe-search" name="ingredients" placeholder="Example: chicken, rice, tomatoes">
+
+        <button type="submit">Search</button>
+    </form>
+
+    <p id="recipe-message"></p>
+    <div id="recipe-results"></div>
+</section>
+
+<script src="/js/storage.js" defer></script>
+<script src="/js/recipe-api.js" defer></script>

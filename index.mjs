@@ -85,6 +85,48 @@ app.get('/api/ingredients', async(req, res) => {
     `
     const [rows] = await db.query(query)
     res.send(rows)
+
+})
+
+app.get('/recipes', (req, res) => {
+    res.render('layout', {
+        content: 'recipes'
+    })
+})
+
+app.get('/api/spoonacular-recipes', async(req, res) => {
+    const ingredients = req.query.ingredients
+
+    if (!ingredients) {
+        return res.status(400).send({
+            error: 'Ingredients are required.'
+        })
+    }
+
+    try {
+        const url =
+            'https://api.spoonacular.com/recipes/findByIngredients' +
+            `?apiKey=${process.env.SPOONACULAR_API_KEY}` +
+            `&ingredients=${encodeURIComponent(ingredients)}` +
+            '&number=6' +
+            '&ranking=1' +
+            '&ignorePantry=true'
+
+        const response = await fetch(url)
+        const recipes = await response.json()
+
+        if (!response.ok) {
+            return res.status(response.status).send(recipes)
+        }
+
+        res.send(recipes)
+    } catch (error) {
+        console.error('Spoonacular request failed:', error)
+
+        res.status(500).send({
+            error: 'Recipes could not be loaded.'
+        })
+    }
 })
 
 // used for vercel deployment, local development uses port 3000
