@@ -37,7 +37,7 @@ export async function loginUser(req, res) {
         if (!passwordMatch) {
             return res.status(401).send('Invalid email or password')
         }
-        res.send('Logged in!')
+        res.redirect('/dashboard')
     } catch (error) {
         console.error(error)
         res.status(500).send('Login Failed')

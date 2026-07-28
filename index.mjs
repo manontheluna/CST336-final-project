@@ -36,6 +36,12 @@ app.get('/register', (req, res) => {
     })
 })
 
+app.get('/dashboard', (req, res) => {
+    res.render('layout', {
+        content: 'dashboard'
+    })
+})
+
 app.get('/api/users', async(req, res) => {
     const query = `
         SELECT * FROM fp_users
