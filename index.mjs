@@ -4,7 +4,7 @@ import { db } from './db/db.mjs'
 import path from 'path'
 import { fileURLToPath } from 'url'
 
-import { registerUser } from './public/js/auth-api.mjs'
+import { loginUser, registerUser } from './public/js/auth-api.mjs'
 
 const PORT = process.env.PORT || 3000
 
@@ -131,6 +131,7 @@ app.get('/api/spoonacular-recipes', async(req, res) => {
 
 // post requests
 app.post('/register', registerUser)
+app.post('/login', loginUser)
 
 // used for vercel deployment, local development uses port 3000
 // otherwise let vercel handle environment
