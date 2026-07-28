@@ -53,6 +53,16 @@ app.get('/login', (req, res) => {
     })
 })
 
+app.get('/logout', (req, res) => {
+    req.session.destroy(error => {
+        if (error) {
+            console.error(error)
+            return res.status(500).send('Logout Failed')
+        }
+        res.redirect('/login')
+    })
+})
+
 app.get('/register', (req, res) => {
     res.render('layout', {
         content: 'register'
