@@ -34,6 +34,10 @@ app.use((req, res, next) => {
 })
 
 // helper function for keeping track of logged in user
+/**
+ * TODO: should probably refactor this out, as project/file gets
+ * larger these helper/middleware functions should be extracted/imported
+ * */
 function requireLogin(req, res, next) {
     if (!req.session.user) {
         return res.redirect('/login')
