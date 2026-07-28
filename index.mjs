@@ -174,6 +174,78 @@ app.get('/api/spoonacular-recipes', async (req, res) => {
 // post requests
 app.post('/register', registerUser)
 app.post('/login', loginUser)
+app.get('/api/usda-foods', async (req, res) => {
+    const query = req.query.query?.trim()
+
+    if (!query) {
+        return res.status(400).send({
+            error: 'A food name is required.'
+        })
+    }
+
+    if (!process.env.USDA_API_KEY) {
+        return res.status(500).send({
+            error: 'USDA API key is not configured.'
+        })
+    }
+
+    try {
+        const url =
+            'https://api.nal.usda.gov/fdc/v1/foods/search' +
+            `?api_key=${encodeURIComponent(process.env.USDA_API_KEY)}`
+
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                query,
+                pageSize: 8
+            })
+        })
+
+        const foodData = await response.json()
+
+        if (!response.ok) {
+            return res.status(response.status).send(foodData)
+        }
+
+        const foods = (foodData.foods ?? []).map((food) => ({
+            fdcId: food.fdcId,
+            name: food.description,
+            brand: food.brandName || food.brandOwner || '',
+            category: food.foodCategory || '',
+            servingSize: food.servingSize ?? null,
+            servingSizeUnit: food.servingSizeUnit || '',
+            nutrients: (food.foodNutrients ?? [])
+                .filter((nutrient) =>
+                    [
+                        'Energy',
+                        'Protein',
+                        'Total lipid (fat)',
+                        'Carbohydrate, by difference'
+                    ].includes(nutrient.nutrientName)
+                )
+                .map((nutrient) => ({
+                    name: nutrient.nutrientName,
+                    value: nutrient.value,
+                    unit: nutrient.unitName
+                }))
+        }))
+
+        res.send({
+            totalHits: foodData.totalHits,
+            foods
+        })
+    } catch (error) {
+        console.error('USDA FoodData request failed:', error)
+
+        res.status(500).send({
+            error: 'Food information could not be loaded.'
+        })
+    }
+})
 
 // used for vercel deployment, local development uses port 3000
 // otherwise let vercel handle environment
