@@ -1,6 +1,6 @@
 const EXPIRING_SOON_DAYS = 7
 
-function calculateExpirationStatus(expirationDate) {
+export function calculateExpirationStatus(expirationDate) {
     if (!expirationDate) {
         return {
             status: 'unknown',
@@ -50,4 +50,3 @@ function calculateExpirationStatus(expirationDate) {
     }
 }
 
-window.calculateExpirationStatus = calculateExpirationStatus
