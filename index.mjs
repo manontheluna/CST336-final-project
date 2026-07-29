@@ -171,6 +171,12 @@ app.get('/api/spoonacular-recipes', async (req, res) => {
     }
 })
 
+app.get('/food-search', (req, res) => {
+    res.render('layout', {
+        content: 'food-search'
+    })
+})
+
 // post requests
 app.post('/register', registerUser)
 app.post('/login', loginUser)
