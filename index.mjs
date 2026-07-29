@@ -79,7 +79,7 @@ app.get('/dashboard', requireLogin, (req, res) => {
     })
 })
 
-app.get('/api/users', async(req, res) => {
+app.get('/api/users', async (req, res) => {
     const query = `
         SELECT * FROM fp_users
     `
@@ -87,7 +87,7 @@ app.get('/api/users', async(req, res) => {
     res.send(rows)
 })
 
-app.get('/api/recipes', async(req, res) => {
+app.get('/api/recipes', async (req, res) => {
     const query = `
         SELECT * FROM fp_recipes
     `
@@ -96,7 +96,7 @@ app.get('/api/recipes', async(req, res) => {
 })
 
 // get user by id
-app.get('/api/users/:id', async(req, res) => {
+app.get('/api/users/:id', async (req, res) => {
     const id = req.params.id
     const query = `
         SELECT * FROM fp_users WHERE id = ?
@@ -105,7 +105,7 @@ app.get('/api/users/:id', async(req, res) => {
     res.send(rows)
 })
 
-app.get('/api/recipes/:id', async(req, res) => {
+app.get('/api/recipes/:id', async (req, res) => {
     const id = req.params.id
     const query = `
         SELECT * FROM fp_recipes WHERE id = ?
@@ -114,7 +114,7 @@ app.get('/api/recipes/:id', async(req, res) => {
     res.send(rows)
 })
 
-app.get('/api/categories', async(req, res) => {
+app.get('/api/categories', async (req, res) => {
     const query = `
         SELECT * FROM fp_categories
     `
@@ -122,13 +122,12 @@ app.get('/api/categories', async(req, res) => {
     res.send(rows)
 })
 
-app.get('/api/ingredients', async(req, res) => {
+app.get('/api/ingredients', async (req, res) => {
     const query = `
         SELECT * FROM fp_ingredients
     `
     const [rows] = await db.query(query)
     res.send(rows)
-
 })
 
 app.get('/recipes', (req, res) => {
@@ -137,7 +136,7 @@ app.get('/recipes', (req, res) => {
     })
 })
 
-app.get('/api/spoonacular-recipes', async(req, res) => {
+app.get('/api/spoonacular-recipes', async (req, res) => {
     const ingredients = req.query.ingredients
 
     if (!ingredients) {

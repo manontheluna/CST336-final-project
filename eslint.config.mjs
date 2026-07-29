@@ -78,7 +78,7 @@ export default [
             'rest-spread-spacing': 'error',
             semi: ['error', 'never'],
             'space-before-blocks': ['warn', 'always'],
-            'space-before-function-paren': ['error', 'never'],
+            'space-before-function-paren': ['error', { anonymous: 'always', named: 'never', asyncArrow: 'always' }],
             'space-in-parens': ['warn', 'never'],
             'space-infix-ops': 'warn',
             'space-unary-ops': 'warn',
