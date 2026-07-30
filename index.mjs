@@ -73,9 +73,19 @@ app.get('/register', (req, res) => {
     })
 })
 
-app.get('/dashboard', requireLogin, (req, res) => {
+app.get('/dashboard', requireLogin, async (req, res) => {
+    const userId = req.session.user.id
+    const pantryItems = `
+        SELECT pi.id, i.name, pi.quantity, pi.unit, pi.expirationDate
+        FROM fp_pantry_items pi
+        JOIN fp_ingredients i
+            ON pi.ingredientId = i.id
+        WHERE pi.userId = ?
+    `
+    const [items] = await db.query(pantryItems, [userId])
     res.render('layout', {
-        content: 'dashboard'
+        content: 'dashboard',
+        pantryItems: items
     })
 })
 

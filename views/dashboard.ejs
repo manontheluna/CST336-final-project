@@ -1,6 +1,18 @@
 <div class="dashboard">
     <h1><%= user.firstName %> <%= user.lastName %></h1>
     <p><%= user.email %></p>
+    <div class="pantry">
+        <ul class="pantry-items">
+            <% for(let item of pantryItems) { %>
+                <li>
+                    <%= item.name %>
+                    <span><%= item.quantity %></span>
+                    <span><%= item.unit %></span>
+                    <span><%= item.expirationDate %></span>
+                </li>
+            <% } %>
+        </ul>
+    </div>
     <a href="/logout">
         Logout
     </a>
