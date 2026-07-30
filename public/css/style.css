@@ -37,11 +37,7 @@ main {
     flex: 1;
 }
 
-
-
-
     /* Homepage */
-
 
 /*
 The main homepage container.
@@ -888,4 +884,21 @@ Register link
 
 .register-link a:hover {
     text-decoration: underline;
+
+nav {
+    background: var(--light-gray);
+}
+
+/* PANTRY */
+.add-new-ingredient form {
+    display: flex;
+    flex-direction: column;
+    max-width: calc(100% / 3);
+}
+.pantry {
+    border: 1px dashed black;
+}
+
+.pantry-items li {
+    display: flex;
 }

@@ -190,6 +190,30 @@ app.get('/food-search', (req, res) => {
 // post requests
 app.post('/register', registerUser)
 app.post('/login', loginUser)
+
+// NOTE: this function does two things, it inserts ingredients in ingredient table
+// and pantry item in pantry table, the ingredients table is a general table
+// that holds all ingredients and the pantry table is the pantry per user
+// the dashboard shows ingredients that belong to a user in their "pantry"
+// so in order to adhere to the db architecture two inserts are necessary
+app.post('/ingredients/add', async (req, res) => {
+    const userId = req.session.user.id
+    const { ingredientName, description, quantity, unit, expiration } = req.body
+    const ingredientsInsert = `
+        INSERT INTO fp_ingredients(name, description) VALUES (?, ?)
+    `
+    const [ingredientResult] = await db.execute(ingredientsInsert, [ingredientName, description])
+
+    const ingredientId = ingredientResult.insertId
+
+    const pantryInsert = `
+        INSERT INTO fp_pantry_items(userId, ingredientId, quantity, unit, expirationDate)
+        VALUES (?, ?, ?, ?, ?)
+    `
+    await db.execute(pantryInsert, [userId, ingredientId, quantity, unit, expiration])
+    res.redirect('/dashboard')
+})
+
 app.get('/api/usda-foods', async (req, res) => {
     const query = req.query.query?.trim()
 

@@ -1,7 +1,11 @@
 <div class="dashboard">
     <h1><%= user.firstName %> <%= user.lastName %></h1>
     <p><%= user.email %></p>
+    <a href="/logout">
+        Logout
+    </a>
     <div class="pantry">
+        <p>Pantry Items</p>
         <ul class="pantry-items">
             <% for(let item of pantryItems) { %>
                 <li>
@@ -9,11 +13,40 @@
                     <span><%= item.quantity %></span>
                     <span><%= item.unit %></span>
                     <span><%= item.expirationDate %></span>
+                    <form action="/pantry-items/edit" method="POST">
+                        <button>Edit</button>
+                    </form>
+                    <form action="/pantry-items/delete" method="POST">
+                        <button>Delete</button>
+                    </form>
                 </li>
             <% } %>
         </ul>
+        <form action="pantry-items/add" method="POST">
+            <button>
+                Add New
+            </button>
+        </form>
     </div>
-    <a href="/logout">
-        Logout
-    </a>
+    <div class="add-new-ingredient">
+        Add new ingredient
+        <form action="/ingredients/add" method="POST">
+            <label>Name</label>
+            <input type="text" name="ingredientName" placeholder="Ingredient Name">
+            <label>Description</label>
+            <input type="text" name="description" placeholder="Ingredient Description">
+            <label>Quantity</label>
+            <input type="number" name="quantity" placeholder="Quantity">
+            <label>Unit</label>
+            <select name="unit">
+                <option value="count">count</option>
+                <option value="lbs">lbs</option>
+                <option value="oz">oz</option>
+                <option value="gallons">gallons</option>
+            </select>
+            <label>Expiration Date</label>
+            <input type="date" name="expiration">
+            <button type="submit">Add</button>
+        </form>
+    </div>
 </div>
