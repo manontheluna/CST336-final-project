@@ -40,3 +40,75 @@ main {
 nav {
     background: var(--light-gray);
 }
+
+/*----- Homepage----- */
+
+
+.home-page {
+    width: 80%;
+    max-width: 800px;
+    margin: auto;
+    text-align: center;
+    padding: 40px;
+}
+
+.home-page h1 {
+    color: green;
+    margin-bottom: 20px;
+}
+
+.home-page h2 {
+    color: darkgreen;
+    margin-top: 30px;
+    margin-bottom: 15px;
+}
+
+.home-page hr {
+    margin: 35px 0;
+}
+
+.home-page p {
+    font-size: 20px;
+    line-height: 1.5;
+}
+
+.home-page ul {
+    display: inline-block;
+    text-align: left;
+    line-height: 1.8;
+    margin: 20px auto;
+    padding-left: 25px;
+}
+
+.home-page li {
+    margin-bottom: 10px;
+}
+
+.home-buttons {
+    margin-top: 30px;
+}
+
+.home-buttons {
+    margin-top: 30px;
+}
+
+.home-button-link {
+    display: inline-block;
+    padding: 12px 22px;
+    margin: 10px;
+    font-size: 18px;
+    color: black;
+    background-color: #eeeeee;
+    border: 2px solid black;
+    text-decoration: none;
+}
+
+.home-button-link:hover {
+    background-color: #d9d9d9;
+}
+
+/*----- Nav -----*/
+
+nav {
+    margin-bottom: 20px;
+}
