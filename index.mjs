@@ -217,7 +217,7 @@ app.get('/api/usda-foods', async (req, res) => {
             return res.status(response.status).send(foodData)
         }
 
-        const foods = (foodData.foods ?? []).map((food) => ({
+        const foods = (foodData.foods ?? []).map(food => ({
             fdcId: food.fdcId,
             name: food.description,
             brand: food.brandName || food.brandOwner || '',
@@ -225,7 +225,7 @@ app.get('/api/usda-foods', async (req, res) => {
             servingSize: food.servingSize ?? null,
             servingSizeUnit: food.servingSizeUnit || '',
             nutrients: (food.foodNutrients ?? [])
-                .filter((nutrient) =>
+                .filter(nutrient =>
                     [
                         'Energy',
                         'Protein',
@@ -233,7 +233,7 @@ app.get('/api/usda-foods', async (req, res) => {
                         'Carbohydrate, by difference'
                     ].includes(nutrient.nutrientName)
                 )
-                .map((nutrient) => ({
+                .map(nutrient => ({
                     name: nutrient.nutrientName,
                     value: nutrient.value,
                     unit: nutrient.unitName
