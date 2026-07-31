@@ -18,8 +18,5 @@ document.querySelectorAll('.edit-pantry').forEach(button => {
         // override method for update
         form.action = `/ingredients/edit/${ingredient.id}`
         method.value = 'PUT'
-
-        console.log('ACTION: ', form.action)
-        console.log('METHOD: ', method.value)
     })
 })

@@ -19,11 +19,12 @@ app.set('view engine', 'ejs')
 app.use(express.static(path.join(__dirname, 'public')))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
-app.use(methodOverride((req) => {
+app.use(methodOverride(req => {
     if (req.body && typeof req.body === 'object' && '_method' in req.body) {
         return req.body._method
     }
 }))
+
 app.use(session({
     secret: process.env.SESSION_KEY,
     resave: false,
@@ -36,12 +37,6 @@ app.use(session({
 // make user available globally
 app.use((req, res, next) => {
     res.locals.user = req.session.user
-    next()
-})
-
-app.use((req, res, next) => {
-    console.log('METHOD:', req.method)
-    console.log('BODY:', req.body)
     next()
 })
 
@@ -103,7 +98,7 @@ app.get('/dashboard', requireLogin, async (req, res) => {
     `
     const [groceryLists] = await db.query(gLists, [userId])
 
-    let lists = []
+    const lists = []
 
     for (const list of groceryLists) {
         let existingList = lists.find(item => item.name === list.listName)
@@ -268,9 +263,6 @@ app.post('/ingredients/add', requireLogin, async (req, res) => {
             WHERE userId = ? AND ingredientId = ?`,
             [userId, ingredientId]
         )
-        console.log('user id: ', userId)
-        console.log('ingredient id: ', ingredientId)
-        console.log('existing pantry: ', pantryItem)
         if (pantryItem.length > 0) {
             // Update existing pantry item
             await db.execute(
@@ -454,7 +446,7 @@ app.put('/ingredients/edit/:id', requireLogin, async (req, res) => {
 // otherwise let vercel handle environment
 if (process.env.VERCEL !== '1') {
     app.listen(PORT, () => {
-        console.log(`Express server running at port: ${PORT}`)
+        console.info(`Express server running at port: ${PORT}`)
     })
 }
 
