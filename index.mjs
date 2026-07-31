@@ -1,6 +1,7 @@
 import 'dotenv/config'
 import express from 'express'
 import session from 'express-session'
+import methodOverride from 'method-override'
 import { db } from './db/db.mjs'
 import path from 'path'
 import { fileURLToPath } from 'url'
@@ -18,6 +19,11 @@ app.set('view engine', 'ejs')
 app.use(express.static(path.join(__dirname, 'public')))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
+app.use(methodOverride((req) => {
+    if (req.body && typeof req.body === 'object' && '_method' in req.body) {
+        return req.body._method
+    }
+}))
 app.use(session({
     secret: process.env.SESSION_KEY,
     resave: false,
@@ -30,6 +36,12 @@ app.use(session({
 // make user available globally
 app.use((req, res, next) => {
     res.locals.user = req.session.user
+    next()
+})
+
+app.use((req, res, next) => {
+    console.log('METHOD:', req.method)
+    console.log('BODY:', req.body)
     next()
 })
 
@@ -372,6 +384,69 @@ app.get('/api/usda-foods', async (req, res) => {
         res.status(500).send({
             error: 'Food information could not be loaded.'
         })
+    }
+})
+
+// PUT REQUESTS
+app.put('/ingredients/edit/:id', requireLogin, async (req, res) => {
+    try {
+        const userId = req.session.user.id
+        const pantryItemId = req.params.id
+
+        const { ingredientName, description, quantity, unit, expiration } = req.body
+
+        // Check if ingredient already exists
+        const [existing] = await db.execute(
+            `SELECT id
+             FROM fp_ingredients
+             WHERE name = ?`,
+            [ingredientName]
+        )
+
+        let ingredientId
+
+        if (existing.length > 0) {
+            ingredientId = existing[0].id
+
+            // Update the description in case it changed
+            await db.execute(
+                `UPDATE fp_ingredients
+                 SET description = ?
+                 WHERE id = ?`,
+                [description, ingredientId]
+            )
+        } else {
+            const [result] = await db.execute(
+                `INSERT INTO fp_ingredients (name, description)
+                 VALUES (?, ?)`,
+                [ingredientName, description]
+            )
+
+            ingredientId = result.insertId
+        }
+
+        // Update the pantry item
+        await db.execute(
+            `UPDATE fp_pantry_items
+             SET ingredientId = ?,
+                 quantity = ?,
+                 unit = ?,
+                 expirationDate = ?
+             WHERE id = ? AND userId = ?`,
+            [
+                ingredientId,
+                quantity,
+                unit,
+                expiration,
+                pantryItemId,
+                userId
+            ]
+        )
+
+        res.redirect('/dashboard')
+    } catch (error) {
+        console.error(error)
+        res.status(500).send('Invalid')
     }
 })
 

@@ -3,15 +3,23 @@
 // dependent on behavior or editing user flow
 
 const editPantry = document.querySelector('.edit-pantry')
+const form = document.querySelector('#ingredientForm')
+const method = form?.querySelector('[name="_method"]')
 
 document.querySelectorAll('.edit-pantry').forEach(button => {
     button.addEventListener('click', () => {
         const ingredient = JSON.parse(button.dataset.ingredient)
-        console.log('ingredient: ', ingredient)
+
         document.querySelector('[name="ingredientName"]').value = ingredient.name ?? ''
         document.querySelector('[name="description"]').value = ingredient.description ?? ''
         document.querySelector('[name="quantity"]').value = ingredient.quantity ?? ''
         document.querySelector('[name="unit"]').value = ingredient.unit ?? ''
-        document.querySelector('[name="expiration"]').value = ingredient.expirationDate?.split('T')[0] || ''
+        document.querySelector('[name="expiration"]').value = ingredient.expirationDate?.split('T')[0] ?? ''
+        // override method for update
+        form.action = `/ingredients/edit/${ingredient.id}`
+        method.value = 'PUT'
+
+        console.log('ACTION: ', form.action)
+        console.log('METHOD: ', method.value)
     })
 })
