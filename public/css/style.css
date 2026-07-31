@@ -41,70 +41,552 @@ nav {
     background: var(--light-gray);
 }
 
-/*----- Homepage----- */
+/*----- Homepage -----*/
 
-
+/*
+The main homepage container.
+The width leaves a small amount of space on both sides.
+*/
 .home-page {
-    width: 80%;
-    max-width: 800px;
+    width: 92%;
+    max-width: 1200px;
     margin: auto;
-    text-align: center;
-    padding: 40px;
+    padding-bottom: 60px;
 }
 
-.home-page h1 {
-    color: green;
-    margin-bottom: 20px;
+
+/*----- Hero Section -----*/
+
+/*
+The hero section contains the welcome message
+and the dashboard preview.
+*/
+.home-hero {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 45px;
+    min-height: 580px;
+    margin-top: 20px;
+    padding: 60px;
+    background-color: #f3f7ef;
+    border-radius: 24px;
+    overflow: hidden;
 }
 
-.home-page h2 {
-    color: darkgreen;
-    margin-top: 30px;
-    margin-bottom: 15px;
+/*
+The text area takes approximately half of the hero section.
+*/
+.hero-text {
+    flex: 1;
+    max-width: 530px;
 }
 
-.home-page hr {
-    margin: 35px 0;
-}
-
-.home-page p {
-    font-size: 20px;
-    line-height: 1.5;
-}
-
-.home-page ul {
+.hero-label {
     display: inline-block;
-    text-align: left;
-    line-height: 1.8;
-    margin: 20px auto;
-    padding-left: 25px;
+    margin-bottom: 18px;
+    padding: 8px 15px;
+    color: #46753c;
+    background-color: #e3eddc;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
-.home-page li {
-    margin-bottom: 10px;
+.hero-text h1 {
+    margin: 0 0 22px 0;
+    color: #26342a;
+    font-size: 56px;
+    line-height: 1.08;
 }
+
+/*
+The word inside the span receives the main green color.
+*/
+.hero-text h1 span {
+    display: block;
+    color: #4e843f;
+}
+
+.hero-description {
+    margin-bottom: 30px;
+    color: #667068;
+    font-size: 19px;
+    line-height: 1.7;
+}
+
+
+/*----- Homepage Buttons -----*/
 
 .home-buttons {
-    margin-top: 30px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
 }
 
-.home-buttons {
-    margin-top: 30px;
-}
-
-.home-button-link {
+.home-button {
     display: inline-block;
-    padding: 12px 22px;
-    margin: 10px;
-    font-size: 18px;
-    color: black;
-    background-color: #eeeeee;
-    border: 2px solid black;
+    padding: 13px 24px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
     text-decoration: none;
 }
 
-.home-button-link:hover {
-    background-color: #d9d9d9;
+.primary-home-button {
+    color: white;
+    background-color: #4f873f;
+    border: 2px solid #4f873f;
+}
+
+.primary-home-button:hover {
+    color: white;
+    background-color: #3d6d31;
+    border-color: #3d6d31;
+}
+
+.secondary-home-button {
+    color: #4f873f;
+    background-color: white;
+    border: 2px solid #b7cbae;
+}
+
+.secondary-home-button:hover {
+    color: #3d6d31;
+    background-color: #edf4e9;
+}
+
+
+/*----- Dashboard Preview -----*/
+
+/*
+The dashboard preview is decorative.
+It gives visitors an idea of what the app looks like.
+*/
+.hero-preview {
+    flex: 1;
+    max-width: 500px;
+    padding: 25px;
+    background-color: white;
+    border: 1px solid #dde6d8;
+    border-radius: 18px;
+    box-shadow: 0 18px 40px rgba(44, 70, 40, 0.12);
+}
+
+.preview-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 22px;
+}
+
+.preview-small-text {
+    margin: 0 0 3px 0;
+    color: #8a938b;
+    font-size: 13px;
+}
+
+.preview-header h2 {
+    margin: 0;
+    color: #2f3b31;
+    font-size: 23px;
+}
+
+.preview-profile {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    color: white;
+    background-color: #4f873f;
+    border-radius: 50%;
+    font-weight: bold;
+}
+
+.preview-summary {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 18px;
+}
+
+.summary-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+    padding: 14px;
+    background-color: #f6f9f3;
+    border-radius: 10px;
+}
+
+.summary-icon {
+    font-size: 25px;
+}
+
+.summary-card strong {
+    display: block;
+    color: #324036;
+    font-size: 20px;
+}
+
+.summary-card p {
+    margin: 2px 0 0 0;
+    color: #7c857d;
+    font-size: 12px;
+}
+
+.preview-section {
+    margin-top: 16px;
+    padding: 16px;
+    border: 1px solid #e5ebe1;
+    border-radius: 12px;
+}
+
+.preview-section-heading {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.preview-section-heading h3 {
+    margin: 0;
+    color: #354338;
+    font-size: 15px;
+}
+
+.preview-section-heading span {
+    color: #4f873f;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.food-item {
+    display: flex;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid #edf0eb;
+}
+
+.food-item:last-child {
+    border-bottom: none;
+}
+
+.food-icon {
+    margin-right: 12px;
+    font-size: 23px;
+}
+
+.food-information {
+    flex: 1;
+}
+
+.food-information strong {
+    color: #37433a;
+    font-size: 13px;
+}
+
+.food-information p {
+    margin: 2px 0 0 0;
+    color: #909891;
+    font-size: 10px;
+}
+
+.expiration-warning {
+    color: #d86543;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.recipe-preview {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background-color: #f4f8f1;
+    border-radius: 9px;
+}
+
+.recipe-preview-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 55px;
+    height: 55px;
+    background-color: white;
+    border-radius: 9px;
+    font-size: 30px;
+}
+
+.recipe-preview strong {
+    color: #354338;
+    font-size: 13px;
+}
+
+.recipe-preview p {
+    margin: 4px 0 0 0;
+    color: #7d877f;
+    font-size: 10px;
+}
+
+
+/*----- Shared Section Heading -----*/
+
+.section-heading {
+    margin-bottom: 35px;
+    text-align: center;
+}
+
+.section-heading p {
+    margin-bottom: 7px;
+    color: #4f873f;
+    font-size: 14px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.section-heading h2 {
+    margin: 0;
+    color: #2f3b31;
+    font-size: 34px;
+}
+
+
+/*----- Benefits Section -----*/
+
+.home-benefits {
+    padding: 80px 0;
+}
+
+.benefit-card-container {
+    display: flex;
+    justify-content: center;
+    gap: 22px;
+    flex-wrap: wrap;
+}
+
+.benefit-card {
+    width: 30%;
+    min-width: 250px;
+    padding: 32px;
+    background-color: white;
+    border: 1px solid #e0e8dc;
+    border-radius: 14px;
+    box-shadow: 0 8px 22px rgba(43, 65, 40, 0.07);
+}
+
+.benefit-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 58px;
+    height: 58px;
+    margin-bottom: 20px;
+    background-color: #edf4e8;
+    border-radius: 12px;
+    font-size: 30px;
+}
+
+.benefit-card h3 {
+    margin-bottom: 12px;
+    color: #334037;
+}
+
+.benefit-card p {
+    margin: 0;
+    color: #727b73;
+    line-height: 1.7;
+}
+
+
+/*----- Process Section -----*/
+
+.home-process {
+    padding: 70px 40px;
+    background-color: #f7f9f5;
+    border-radius: 22px;
+}
+
+.process-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 22px;
+}
+
+.process-step {
+    flex: 1;
+    max-width: 280px;
+    text-align: center;
+}
+
+.process-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    margin: 0 auto 18px auto;
+    color: white;
+    background-color: #4f873f;
+    border-radius: 50%;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.process-step h3 {
+    color: #334037;
+}
+
+.process-step p {
+    color: #737c74;
+    line-height: 1.6;
+}
+
+.process-arrow {
+    color: #9db294;
+    font-size: 35px;
+}
+
+
+/*----- Final Call-to-Action -----*/
+
+.home-call-to-action {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 35px;
+    margin-top: 70px;
+    padding: 45px 55px;
+    color: white;
+    background-color: #477a39;
+    border-radius: 20px;
+}
+
+.call-to-action-label {
+    margin-bottom: 8px;
+    color: #dcebd6;
+    font-size: 13px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.home-call-to-action h2 {
+    margin: 0 0 10px 0;
+    font-size: 34px;
+}
+
+.home-call-to-action p {
+    max-width: 650px;
+    margin: 0;
+    color: #e3eee0;
+    line-height: 1.6;
+}
+
+.call-to-action-button {
+    min-width: 175px;
+    color: #477a39;
+    background-color: white;
+    text-align: center;
+}
+
+.call-to-action-button:hover {
+    color: #2f5b27;
+    background-color: #edf4e9;
+}
+
+
+/*----- Responsive Homepage Styles -----*/
+
+/*
+These styles are used on tablets and smaller screens.
+*/
+@media (max-width: 900px) {
+
+    .home-hero {
+        flex-direction: column;
+        padding: 45px 30px;
+    }
+
+    .hero-text {
+        max-width: 700px;
+        text-align: center;
+    }
+
+    .home-buttons {
+        justify-content: center;
+    }
+
+    .hero-preview {
+        width: 100%;
+        max-width: 600px;
+    }
+
+    .benefit-card {
+        width: 45%;
+    }
+
+    .process-container {
+        flex-direction: column;
+    }
+
+    .process-arrow {
+        transform: rotate(90deg);
+    }
+}
+
+
+/*
+These styles are used on phones.
+*/
+@media (max-width: 600px) {
+
+    .home-page {
+        width: 94%;
+    }
+
+    .home-hero {
+        padding: 35px 20px;
+    }
+
+    .hero-text h1 {
+        font-size: 40px;
+    }
+
+    .hero-description {
+        font-size: 17px;
+    }
+
+    .home-buttons {
+        flex-direction: column;
+    }
+
+    .home-button {
+        width: 100%;
+        text-align: center;
+    }
+
+    .preview-summary {
+        flex-direction: column;
+    }
+
+    .benefit-card {
+        width: 100%;
+    }
+
+    .home-process {
+        padding: 50px 20px;
+    }
+
+    .home-call-to-action {
+        flex-direction: column;
+        padding: 40px 25px;
+        text-align: center;
+    }
 }
 
 /*----- Nav -----*/
