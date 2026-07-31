@@ -39,10 +39,10 @@
                             </div>
                         <% } %>
                     </div>
-                    <form action="/ingredients/edit" method="POST">
+                    <form action="/groceries/edit" method="POST">
                         <button>Edit</button>
                     </form>
-                    <form action="/ingredients/delete" method="POST">
+                    <form action="/groceries/delete/<%= item.id %>" method="POST">
                         <button>Delete</button>
                     </form>
                 </li>

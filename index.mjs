@@ -83,7 +83,7 @@ app.get('/dashboard', requireLogin, async (req, res) => {
         WHERE pi.userId = ?
     `
     const gLists = `
-        SELECT gl.name as listName, gi.itemName, gi.quantity
+        SELECT gl.id, gl.name as listName, gi.itemName, gi.quantity
         FROM fp_grocery_items gi
         JOIN fp_grocery_lists gl
             ON gi.groceryListId = gl.id
@@ -97,6 +97,7 @@ app.get('/dashboard', requireLogin, async (req, res) => {
         let existingList = lists.find(item => item.name === list.listName)
         if (!existingList) {
             existingList = {
+                id: list.id,
                 name: list.listName,
                 items: []
             }
@@ -286,6 +287,16 @@ app.post('/ingredients/delete/:id', requireLogin, async (req, res) => {
     const id = req.params.id
     await db.execute(`
         DELETE FROM fp_pantry_items
+        WHERE id = ? AND userId = ?
+    `, [id, userId])
+    res.redirect('/dashboard')
+})
+
+app.post('/groceries/delete/:id', requireLogin, async (req, res) => {
+    const userId = req.session.user.id
+    const id = req.params.id
+    await db.execute(`
+        DELETE FROM fp_grocery_lists
         WHERE id = ? AND userId = ?
     `, [id, userId])
     res.redirect('/dashboard')
