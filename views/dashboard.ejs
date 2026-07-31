@@ -5,7 +5,7 @@
         Logout
     </a>
     <div class="pantry">
-        <p>Pantry Items</p>
+        <p>Pantry:</p>
         <ul class="pantry-items">
             <% for(let item of pantryItems) { %>
                 <li>
@@ -13,20 +13,18 @@
                     <span><%= item.quantity %></span>
                     <span><%= item.unit %></span>
                     <span><%= item.expirationDate %></span>
-                    <form action="/pantry-items/edit" method="POST">
+                    <form action="/ingredients/edit" method="POST">
                         <button>Edit</button>
                     </form>
-                    <form action="/pantry-items/delete" method="POST">
+                    <form action="/ingredients/delete" method="POST">
                         <button>Delete</button>
                     </form>
                 </li>
             <% } %>
         </ul>
-        <form action="pantry-items/add" method="POST">
-            <button>
-                Add New
-            </button>
-        </form>
+        <button>
+            Add New
+        </button>
     </div>
     <div class="add-new-ingredient">
         Add new ingredient

@@ -196,22 +196,59 @@ app.post('/login', loginUser)
 // that holds all ingredients and the pantry table is the pantry per user
 // the dashboard shows ingredients that belong to a user in their "pantry"
 // so in order to adhere to the db architecture two inserts are necessary
-app.post('/ingredients/add', async (req, res) => {
-    const userId = req.session.user.id
-    const { ingredientName, description, quantity, unit, expiration } = req.body
-    const ingredientsInsert = `
-        INSERT INTO fp_ingredients(name, description) VALUES (?, ?)
-    `
-    const [ingredientResult] = await db.execute(ingredientsInsert, [ingredientName, description])
+app.post('/ingredients/add', requireLogin, async (req, res) => {
+    console.log('session: ', req.session.user)
+    try {
+        const userId = req.session.user.id
+        const { ingredientName, description, quantity, unit, expiration } = req.body
+        // Check if ingredient already exists
+        const [existing] = await db.execute(
+            `SELECT id
+            FROM fp_ingredients
+            WHERE name = ?`,
+            [ingredientName]
+        )
 
-    const ingredientId = ingredientResult.insertId
+        let ingredientId
 
-    const pantryInsert = `
-        INSERT INTO fp_pantry_items(userId, ingredientId, quantity, unit, expirationDate)
-        VALUES (?, ?, ?, ?, ?)
-    `
-    await db.execute(pantryInsert, [userId, ingredientId, quantity, unit, expiration])
-    res.redirect('/dashboard')
+        if (existing.length > 0) {
+            ingredientId = existing[0].id
+        } else {
+            const ingredientsInsert = `
+                INSERT INTO fp_ingredients (name, description)
+                VALUES (?, ?)
+            `
+            const [result] = await db.execute(ingredientsInsert, [ingredientName, description])
+            ingredientId = result.insertId
+        }
+
+        // Check if this ingredient is already in the user's pantry
+        const [pantryItem] = await db.execute(
+            `SELECT id FROM fp_pantry_items
+            WHERE userId = ? AND ingredientId = ?`,
+            [userId, ingredientId]
+        )
+        if (pantryItem.length > 0) {
+            // Update existing pantry item
+            await db.execute(
+                `UPDATE fp_pantry_items
+                SET quantity = ?, unit = ?, expirationDate = ? WHERE id = ?`,
+                [quantity, unit, expiration, pantryItem[0].id]
+            )
+        } else {
+            // Insert new pantry item
+            await db.execute(
+                `INSERT INTO fp_pantry_items
+                 (userId, ingredientId, quantity, unit, expirationDate)
+                 VALUES (?, ?, ?, ?, ?)`,
+                [userId, ingredientId, quantity, unit, expiration]
+            )
+        }
+        res.redirect('/dashboard')
+    } catch (error) {
+        console.error(error)
+        res.status(500).send('Invalid')
+    }
 })
 
 app.get('/api/usda-foods', async (req, res) => {
