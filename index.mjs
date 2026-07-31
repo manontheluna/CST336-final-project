@@ -109,7 +109,6 @@ app.get('/dashboard', requireLogin, async (req, res) => {
         })
     }
 
-    console.log(JSON.stringify(lists, null, 2))
     const [items] = await db.query(pantryItems, [userId])
     res.render('layout', {
         content: 'dashboard',
@@ -256,6 +255,9 @@ app.post('/ingredients/add', requireLogin, async (req, res) => {
             WHERE userId = ? AND ingredientId = ?`,
             [userId, ingredientId]
         )
+        console.log('user id: ', userId)
+        console.log('ingredient id: ', ingredientId)
+        console.log('existing pantry: ', pantryItem)
         if (pantryItem.length > 0) {
             // Update existing pantry item
             await db.execute(
@@ -277,6 +279,16 @@ app.post('/ingredients/add', requireLogin, async (req, res) => {
         console.error(error)
         res.status(500).send('Invalid')
     }
+})
+
+app.post('/ingredients/delete/:id', requireLogin, async (req, res) => {
+    const userId = req.session.user.id
+    const id = req.params.id
+    await db.execute(`
+        DELETE FROM fp_pantry_items
+        WHERE id = ? AND userId = ?
+    `, [id, userId])
+    res.redirect('/dashboard')
 })
 
 app.get('/api/usda-foods', async (req, res) => {
