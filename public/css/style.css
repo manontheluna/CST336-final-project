@@ -895,6 +895,16 @@ nav {
     flex-direction: column;
     max-width: calc(100% / 3);
 }
+
+.groceries {
+    border: 1px dashed black;
+}
+
+.grocery-lists li {
+    border: 1px dashed lightblue;
+    display: flex;
+}
+
 .pantry {
     border: 1px dashed black;
 }

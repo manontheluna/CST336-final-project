@@ -82,10 +82,39 @@ app.get('/dashboard', requireLogin, async (req, res) => {
             ON pi.ingredientId = i.id
         WHERE pi.userId = ?
     `
+    const gLists = `
+        SELECT gl.name as listName, gi.itemName, gi.quantity
+        FROM fp_grocery_items gi
+        JOIN fp_grocery_lists gl
+            ON gi.groceryListId = gl.id
+        WHERE gl.userId = ?
+    `
+    const [groceryLists] = await db.query(gLists, [userId])
+
+    let lists = []
+
+    for (const list of groceryLists) {
+        let existingList = lists.find(item => item.name === list.listName)
+        if (!existingList) {
+            existingList = {
+                name: list.listName,
+                items: []
+            }
+
+            lists.push(existingList)
+        }
+        existingList.items.push({
+            name: list.itemName,
+            quantity: list.quantity
+        })
+    }
+
+    console.log(JSON.stringify(lists, null, 2))
     const [items] = await db.query(pantryItems, [userId])
     res.render('layout', {
         content: 'dashboard',
-        pantryItems: items
+        pantryItems: items,
+        groceries: lists
     })
 })
 
@@ -197,7 +226,6 @@ app.post('/login', loginUser)
 // the dashboard shows ingredients that belong to a user in their "pantry"
 // so in order to adhere to the db architecture two inserts are necessary
 app.post('/ingredients/add', requireLogin, async (req, res) => {
-    console.log('session: ', req.session.user)
     try {
         const userId = req.session.user.id
         const { ingredientName, description, quantity, unit, expiration } = req.body
