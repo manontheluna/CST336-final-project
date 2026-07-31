@@ -13,18 +13,19 @@
                     <span><%= item.quantity %></span>
                     <span><%= item.unit %></span>
                     <span><%= item.expirationDate %></span>
-                    <form action="/ingredients/edit" method="POST">
-                        <button>Edit</button>
-                    </form>
+                    <button
+                        class="edit-pantry"
+                        data-type="pantry"
+                        data-ingredient='<%= JSON.stringify(item) %>'
+                    >
+                        Edit
+                    </button>
                     <form action="/ingredients/delete/<%= item.id %>" method="POST">
                         <button>Delete</button>
                     </form>
                 </li>
             <% } %>
         </ul>
-        <button>
-            Add New
-        </button>
     </div>
     <div class="groceries">
         <strong>Grocery Lists</strong>
@@ -48,7 +49,6 @@
                 </li>
             <% } %>
         </ul>
-        <button>Add New</button>
     </div>
     <div class="add-new-ingredient">
         Add new ingredient
