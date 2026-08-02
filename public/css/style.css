@@ -37,6 +37,743 @@ main {
     flex: 1;
 }
 
-nav {
-    background: var(--light-gray);
+
+
+/*====================================================
+    Homepage
+====================================================*/
+
+/*
+The main homepage container.
+Percent is used for the width so the page can resize.
+rem is used for the maximum width and spacing.
+*/
+.home-page {
+    width: 92%;
+    max-width: 75rem;
+    margin: auto;
+    padding-bottom: 3.75rem;
+}
+
+
+/*====================================================
+    Hero Section
+====================================================*/
+
+/*
+The hero section contains the welcome message
+and the dashboard preview.
+*/
+.home-hero {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 2.8rem;
+    min-height: 36.25rem;
+    margin-top: 1.25rem;
+    padding: 3.75rem;
+
+    background-color: #f3f7ef;
+    border-radius: 1.5rem;
+    overflow: hidden;
+}
+
+/*
+The text area takes approximately half
+of the hero section.
+*/
+.hero-text {
+    flex: 1;
+    max-width: 33.125rem;
+}
+
+.hero-label {
+    display: inline-block;
+
+    margin-bottom: 1.125rem;
+    padding: 0.5rem 0.95rem;
+
+    color: #46753c;
+    background-color: #e3eddc;
+
+    border-radius: 1.25rem;
+
+    font-size: 0.875rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.06rem;
+}
+
+.hero-text h1 {
+    margin: 0 0 1.375rem 0;
+
+    color: #26342a;
+
+    font-size: 3.5rem;
+    line-height: 1.08;
+}
+
+/*
+The word inside the span receives
+the main green color.
+*/
+.hero-text h1 span {
+    display: block;
+    color: #4e843f;
+}
+
+.hero-description {
+    margin-bottom: 1.875rem;
+
+    color: #667068;
+
+    font-size: 1.2rem;
+    line-height: 1.7;
+}
+
+
+/*====================================================
+    Homepage Buttons
+====================================================*/
+
+.home-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.875rem;
+}
+
+/*
+Styles links so they look like buttons.
+*/
+.home-button {
+    display: inline-block;
+
+    padding: 0.8rem 1.5rem;
+
+    border-radius: 0.5rem;
+
+    font-size: 1rem;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.primary-home-button {
+    color: white;
+    background-color: #4f873f;
+    border: 0.125rem solid #4f873f;
+}
+
+.primary-home-button:hover {
+    color: white;
+    background-color: #3d6d31;
+    border-color: #3d6d31;
+}
+
+.secondary-home-button {
+    color: #4f873f;
+    background-color: white;
+    border: 0.125rem solid #b7cbae;
+}
+
+.secondary-home-button:hover {
+    color: #3d6d31;
+    background-color: #edf4e9;
+}
+
+
+/*====================================================
+    Dashboard Preview
+====================================================*/
+
+/*
+This dashboard preview is decorative.
+It gives visitors an idea of what the app may look like.
+*/
+.hero-preview {
+    flex: 1;
+
+    max-width: 31.25rem;
+    padding: 1.56rem;
+
+    background-color: white;
+
+    border: 0.0625rem solid #dde6d8;
+    border-radius: 1.125rem;
+
+    box-shadow: 0 1.125rem 2.5rem rgba(44, 70, 40, 0.12);
+}
+
+.preview-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 1.375rem;
+}
+
+.preview-small-text {
+    margin: 0 0 0.2rem 0;
+
+    color: #8a938b;
+
+    font-size: 0.8rem;
+}
+
+.preview-header h2 {
+    margin: 0;
+
+    color: #2f3b31;
+
+    font-size: 1.45rem;
+}
+
+.preview-profile {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 2.625rem;
+    height: 2.625rem;
+
+    color: white;
+    background-color: #4f873f;
+
+    border-radius: 50%;
+
+    font-weight: bold;
+}
+
+.preview-summary {
+    display: flex;
+
+    gap: 0.75rem;
+    margin-bottom: 1.125rem;
+}
+
+.summary-card {
+    display: flex;
+    align-items: center;
+
+    gap: 0.75rem;
+    flex: 1;
+
+    padding: 0.875rem;
+
+    background-color: #f6f9f3;
+
+    border-radius: 0.625rem;
+}
+
+.summary-icon {
+    font-size: 1.56rem;
+}
+
+.summary-card strong {
+    display: block;
+
+    color: #324036;
+
+    font-size: 1.25rem;
+}
+
+.summary-card p {
+    margin: 0.125rem 0 0 0;
+
+    color: #7c857d;
+
+    font-size: 0.75rem;
+}
+
+.preview-section {
+    margin-top: 1rem;
+    padding: 1rem;
+
+    border: 0.0625rem solid #e5ebe1;
+    border-radius: 0.75rem;
+}
+
+.preview-section-heading {
+    display: flex;
+    justify-content: space-between;
+
+    margin-bottom: 0.75rem;
+}
+
+.preview-section-heading h3 {
+    margin: 0;
+
+    color: #354338;
+
+    font-size: 0.95rem;
+}
+
+.preview-section-heading span {
+    color: #4f873f;
+
+    font-size: 0.7rem;
+    font-weight: bold;
+}
+
+.food-item {
+    display: flex;
+    align-items: center;
+
+    padding: 0.5rem 0;
+
+    border-bottom: 0.0625rem solid #edf0eb;
+}
+
+.food-item:last-child {
+    border-bottom: none;
+}
+
+.food-icon {
+    margin-right: 0.75rem;
+
+    font-size: 1.45rem;
+}
+
+.food-information {
+    flex: 1;
+}
+
+.food-information strong {
+    color: #37433a;
+
+    font-size: 0.8rem;
+}
+
+.food-information p {
+    margin: 0.125rem 0 0 0;
+
+    color: #909891;
+
+    font-size: 0.625rem;
+}
+
+.expiration-warning {
+    color: #d86543;
+
+    font-size: 0.7rem;
+    font-weight: bold;
+}
+
+.recipe-preview {
+    display: flex;
+    align-items: center;
+
+    gap: 0.75rem;
+    padding: 0.75rem;
+
+    background-color: #f4f8f1;
+
+    border-radius: 0.56rem;
+}
+
+.recipe-preview-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 3.44rem;
+    height: 3.44rem;
+
+    background-color: white;
+
+    border-radius: 0.56rem;
+
+    font-size: 1.875rem;
+}
+
+.recipe-preview strong {
+    color: #354338;
+
+    font-size: 0.8rem;
+}
+
+.recipe-preview p {
+    margin: 0.25rem 0 0 0;
+
+    color: #7d877f;
+
+    font-size: 0.625rem;
+}
+
+
+/*====================================================
+    Shared Section Heading
+====================================================*/
+
+.section-heading {
+    margin-bottom: 2.2rem;
+    text-align: center;
+}
+
+.section-heading p {
+    margin-bottom: 0.45rem;
+
+    color: #4f873f;
+
+    font-size: 0.875rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.06rem;
+}
+
+.section-heading h2 {
+    margin: 0;
+
+    color: #2f3b31;
+
+    font-size: 2.125rem;
+}
+
+
+/*====================================================
+    Benefits Section
+====================================================*/
+
+.home-benefits {
+    padding: 5rem 0;
+}
+
+.benefit-card-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+
+    gap: 1.375rem;
+}
+
+.benefit-card {
+    width: 30%;
+    min-width: 15.625rem;
+
+    padding: 2rem;
+
+    background-color: white;
+
+    border: 0.0625rem solid #e0e8dc;
+    border-radius: 0.875rem;
+
+    box-shadow: 0 0.5rem 1.375rem rgba(43, 65, 40, 0.07);
+}
+
+.benefit-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 3.625rem;
+    height: 3.625rem;
+
+    margin-bottom: 1.25rem;
+
+    background-color: #edf4e8;
+
+    border-radius: 0.75rem;
+
+    font-size: 1.875rem;
+}
+
+.benefit-card h3 {
+    margin-bottom: 0.75rem;
+
+    color: #334037;
+}
+
+.benefit-card p {
+    margin: 0;
+
+    color: #727b73;
+
+    line-height: 1.7;
+}
+
+
+/*====================================================
+    Process Section
+====================================================*/
+
+.home-process {
+    padding: 4.375rem 2.5rem;
+
+    background-color: #f7f9f5;
+
+    border-radius: 1.375rem;
+}
+
+.process-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 1.375rem;
+}
+
+.process-step {
+    flex: 1;
+
+    max-width: 17.5rem;
+
+    text-align: center;
+}
+
+.process-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 3rem;
+    height: 3rem;
+
+    margin: 0 auto 1.125rem auto;
+
+    color: white;
+    background-color: #4f873f;
+
+    border-radius: 50%;
+
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+
+.process-step h3 {
+    color: #334037;
+}
+
+.process-step p {
+    color: #737c74;
+
+    line-height: 1.6;
+}
+
+.process-arrow {
+    color: #9db294;
+
+    font-size: 2.2rem;
+}
+
+
+/*====================================================
+    Final Call-to-Action
+====================================================*/
+
+.home-call-to-action {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 2.2rem;
+
+    margin-top: 4.375rem;
+    padding: 2.8rem 3.44rem;
+
+    color: white;
+    background-color: #477a39;
+
+    border-radius: 1.25rem;
+}
+
+.call-to-action-label {
+    margin-bottom: 0.5rem;
+
+    color: #dcebd6;
+
+    font-size: 0.8rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.06rem;
+}
+
+.home-call-to-action h2 {
+    margin: 0 0 0.625rem 0;
+
+    font-size: 2.125rem;
+}
+
+.home-call-to-action p {
+    max-width: 40.625rem;
+    margin: 0;
+
+    color: #e3eee0;
+
+    line-height: 1.6;
+}
+
+.call-to-action-button {
+    min-width: 10.94rem;
+
+    color: #477a39;
+    background-color: white;
+
+    text-align: center;
+}
+
+.call-to-action-button:hover {
+    color: #2f5b27;
+    background-color: #edf4e9;
+}
+
+
+/*====================================================
+    Responsive Homepage Styles
+====================================================*/
+
+/*
+Tablet and smaller-screen adjustments.
+The breakpoint is written in rem instead of pixels.
+*/
+@media (max-width: 56.25rem) {
+
+    .home-hero {
+        flex-direction: column;
+        padding: 2.8rem 1.875rem;
+    }
+
+    .hero-text {
+        max-width: 43.75rem;
+        text-align: center;
+    }
+
+    .home-buttons {
+        justify-content: center;
+    }
+
+    .hero-preview {
+        width: 100%;
+        max-width: 37.5rem;
+    }
+
+    .benefit-card {
+        width: 45%;
+    }
+
+    .process-container {
+        flex-direction: column;
+    }
+
+    .process-arrow {
+        transform: rotate(90deg);
+    }
+}
+
+
+/*
+Phone adjustments.
+*/
+@media (max-width: 37.5rem) {
+
+    .home-page {
+        width: 94%;
+    }
+
+    .home-hero {
+        padding: 2.2rem 1.25rem;
+    }
+
+    .hero-text h1 {
+        font-size: 2.5rem;
+    }
+
+    .hero-description {
+        font-size: 1.06rem;
+    }
+
+    .home-buttons {
+        flex-direction: column;
+    }
+
+    .home-button {
+        width: 100%;
+        text-align: center;
+    }
+
+    .preview-summary {
+        flex-direction: column;
+    }
+
+    .benefit-card {
+        width: 100%;
+    }
+
+    .home-process {
+        padding: 3.125rem 1.25rem;
+    }
+
+    .home-call-to-action {
+        flex-direction: column;
+
+        padding: 2.5rem 1.56rem;
+
+        text-align: center;
+    }
+}
+
+
+/*====================================================
+    Navigation
+====================================================*/
+
+.site-header {
+    background-color: var(--light-gray);
+}
+
+/*
+This works like a container.
+It keeps the navigation centered and prevents it
+from becoming too wide.
+*/
+.site-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    width: 90%;
+    max-width: 75rem;
+
+    margin: auto;
+    padding: 1rem 0;
+}
+
+.site-logo {
+    color: #2f5f35;
+
+    font-size: 1.4rem;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.nav-links {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.nav-links a {
+    color: #333333;
+
+    font-size: 1rem;
+    text-decoration: none;
+}
+
+.nav-links a:hover {
+    color: #4f873f;
+}
+
+/*
+Navigation adjustments for smaller screens.
+*/
+@media (max-width: 40rem) {
+
+    .site-nav {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .nav-links {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1rem;
+    }
 }
