@@ -37,7 +37,7 @@ main {
     flex: 1;
 }
 
-    /* Homepage */
+/* Homepage */
 
 /*
 The main homepage container.
@@ -53,7 +53,7 @@ rem is used for the maximum width and spacing.
 
 
 
-    /* Hero Section */
+/* Hero Section */
 
 /*
 The hero section contains the welcome message
@@ -129,7 +129,7 @@ the main green color.
 
 
 
-    /* Homepage Buttons */
+/* Homepage Buttons */
 
 
 .home-buttons {
@@ -178,7 +178,7 @@ Styles links so they look like buttons.
 
 
 
-    /* Dashboard Preview */
+/* Dashboard Preview */
 
 
 /*
@@ -426,7 +426,9 @@ It gives visitors an idea of what the app may look like.
 
 
 
+
 /* Benefits Section */
+
 
 
 .home-benefits {
@@ -613,6 +615,7 @@ It gives visitors an idea of what the app may look like.
 
 
 
+
 /* Responsive Homepage Styles */
 
 
@@ -708,6 +711,7 @@ Phone adjustments.
 
 
 
+
 /* Navigation */
 
 
@@ -775,7 +779,11 @@ Navigation adjustments for smaller screens.
 
 /* Login page */
 
-.login-container {
+.login-container,
+/*
+Centers the registration card on the page.
+*/
+.register-container {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -785,7 +793,8 @@ Navigation adjustments for smaller screens.
 /*
 Main login card.
 */
-.login-card {
+.login-card,
+.register-card {
     width: 100%;
     max-width: 34rem;
 
@@ -802,26 +811,32 @@ Main login card.
 /*
 Main page heading.
 */
-.login-card h1 {
-    text-align: center;
-    color: #2f5f35;
-    margin-bottom: 1rem;
-}
-
 /*
 Small description under the heading.
 */
-.login-description {
+.login-card h1,
+.register-card h1 {
+    margin-bottom: 1rem;
+    color: #2f5f35;
     text-align: center;
-    color: #666666;
+}
+
+/*
+Styles the description under the heading.
+*/
+.login-description,
+.register-description {
     margin-bottom: 2.5rem;
+    color: #666666;
+    text-align: center;
     line-height: 1.6;
 }
 
 /*
 Form labels.
 */
-.login-card label {
+.login-card label,
+.register-card label {
     display: block;
     margin-top: 1rem;
     margin-bottom: 0.5rem;
@@ -832,7 +847,8 @@ Form labels.
 /*
 Input fields.
 */
-.login-card input {
+.login-card input,
+.register-card input {
     width: 100%;
 
     padding: 0.8rem;
@@ -846,14 +862,14 @@ Input fields.
 /*
 Green login button.
 */
-.login-button {
+.login-button,
+.register-button {
     width: 100%;
 
     margin-top: 2rem;
     padding: 0.9rem;
-
-    background-color: #4f873f;
     color: white;
+    background-color: #4f873f;
 
     border: none;
     border-radius: 0.75rem;
@@ -864,7 +880,11 @@ Green login button.
     cursor: pointer;
 }
 
-.login-button:hover {
+/*
+Changes the button color when the mouse is over it.
+*/
+.login-button:hover,
+.register-button:hover {
     background-color: #3d6d31;
 }
 
@@ -911,4 +931,17 @@ nav {
 
 .pantry-items li {
     display: flex;
+.login-link {
+    margin-top: 1.5rem;
+    text-align: center;
+}
+
+.login-link a {
+    color: #4f873f;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.login-link a:hover {
+    text-decoration: underline;
 }
