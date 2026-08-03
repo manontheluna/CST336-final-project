@@ -52,13 +52,24 @@ function requireLogin(req, res, next) {
     next()
 }
 
+// middleware to ensure logged in user gets
+// directed to dashboard if already logged in
+// and trying to go to login page
+function requireGuest(req, res, next) {
+    if (req.session.user) {
+        return res.redirect('/dashboard')
+    }
+
+    next()
+}
+
 app.get('/', (req, res) => {
     res.render('layout', {
         content: 'index'
     })
 })
 
-app.get('/login', (req, res) => {
+app.get('/login', requireGuest, (req, res) => {
     res.render('layout', {
         content: 'login'
     })
