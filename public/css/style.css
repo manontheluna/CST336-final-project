@@ -39,9 +39,9 @@ main {
 
 
 
-/*====================================================
-    Homepage
-====================================================*/
+
+    /* Homepage */
+
 
 /*
 The main homepage container.
@@ -56,9 +56,8 @@ rem is used for the maximum width and spacing.
 }
 
 
-/*====================================================
-    Hero Section
-====================================================*/
+
+    /* Hero Section */
 
 /*
 The hero section contains the welcome message
@@ -133,9 +132,9 @@ the main green color.
 }
 
 
-/*====================================================
-    Homepage Buttons
-====================================================*/
+
+    /* Homepage Buttons */
+
 
 .home-buttons {
     display: flex;
@@ -182,9 +181,9 @@ Styles links so they look like buttons.
 }
 
 
-/*====================================================
-    Dashboard Preview
-====================================================*/
+
+    /* Dashboard Preview */
+
 
 /*
 This dashboard preview is decorative.
@@ -401,9 +400,9 @@ It gives visitors an idea of what the app may look like.
 }
 
 
-/*====================================================
-    Shared Section Heading
-====================================================*/
+
+/* Shared Section Heading */
+
 
 .section-heading {
     margin-bottom: 2.2rem;
@@ -430,9 +429,9 @@ It gives visitors an idea of what the app may look like.
 }
 
 
-/*====================================================
-    Benefits Section
-====================================================*/
+
+/* Benefits Section */
+
 
 .home-benefits {
     padding: 5rem 0;
@@ -492,9 +491,9 @@ It gives visitors an idea of what the app may look like.
 }
 
 
-/*====================================================
-    Process Section
-====================================================*/
+
+/* Process Section */
+
 
 .home-process {
     padding: 4.375rem 2.5rem;
@@ -556,9 +555,9 @@ It gives visitors an idea of what the app may look like.
 }
 
 
-/*====================================================
-    Final Call-to-Action
-====================================================*/
+
+/* Final Call-to-Action */
+
 
 .home-call-to-action {
     display: flex;
@@ -617,9 +616,9 @@ It gives visitors an idea of what the app may look like.
 }
 
 
-/*====================================================
-    Responsive Homepage Styles
-====================================================*/
+
+/* Responsive Homepage Styles */
+
 
 /*
 Tablet and smaller-screen adjustments.
@@ -712,9 +711,9 @@ Phone adjustments.
 }
 
 
-/*====================================================
-    Navigation
-====================================================*/
+
+/* Navigation */
+
 
 .site-header {
     background-color: var(--light-gray);
@@ -776,4 +775,117 @@ Navigation adjustments for smaller screens.
         justify-content: center;
         gap: 1rem;
     }
+}
+
+/* Login page */
+
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 4rem 1rem;
+}
+
+/*
+Main login card.
+*/
+.login-card {
+    width: 100%;
+    max-width: 34rem;
+
+    padding: 2.5rem;
+
+    background-color: white;
+
+    border: 0.0625rem solid #dde6d8;
+    border-radius: 1rem;
+
+    box-shadow: 0 0.5rem 1.5rem rgba(44, 70, 40, 0.10);
+}
+
+/*
+Main page heading.
+*/
+.login-card h1 {
+    text-align: center;
+    color: #2f5f35;
+    margin-bottom: 1rem;
+}
+
+/*
+Small description under the heading.
+*/
+.login-description {
+    text-align: center;
+    color: #666666;
+    margin-bottom: 2.5rem;
+    line-height: 1.6;
+}
+
+/*
+Form labels.
+*/
+.login-card label {
+    display: block;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+
+    font-weight: bold;
+}
+
+/*
+Input fields.
+*/
+.login-card input {
+    width: 100%;
+
+    padding: 0.8rem;
+
+    border: 0.0625rem solid #cccccc;
+    border-radius: 0.5rem;
+
+    font-size: 1rem;
+}
+
+/*
+Green login button.
+*/
+.login-button {
+    width: 100%;
+
+    margin-top: 2rem;
+    padding: 0.9rem;
+
+    background-color: #4f873f;
+    color: white;
+
+    border: none;
+    border-radius: 0.75rem;
+
+    font-size: 1rem;
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+.login-button:hover {
+    background-color: #3d6d31;
+}
+
+/*
+Register link
+*/
+.register-link {
+    margin-top: 1.5rem;
+    text-align: center;
+}
+
+.register-link a {
+    color: #4f873f;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.register-link a:hover {
+    text-decoration: underline;
 }
