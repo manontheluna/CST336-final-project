@@ -1,6 +1,7 @@
 import 'dotenv/config'
 import express from 'express'
 import session from 'express-session'
+import methodOverride from 'method-override'
 import { db } from './db/db.mjs'
 import path from 'path'
 import { fileURLToPath } from 'url'
@@ -18,6 +19,12 @@ app.set('view engine', 'ejs')
 app.use(express.static(path.join(__dirname, 'public')))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
+app.use(methodOverride(req => {
+    if (req.body && typeof req.body === 'object' && '_method' in req.body) {
+        return req.body._method
+    }
+}))
+
 app.use(session({
     secret: process.env.SESSION_KEY,
     resave: false,
@@ -45,13 +52,24 @@ function requireLogin(req, res, next) {
     next()
 }
 
+// middleware to ensure logged in user gets
+// directed to dashboard if already logged in
+// and trying to go to login page
+function requireGuest(req, res, next) {
+    if (req.session.user) {
+        return res.redirect('/dashboard')
+    }
+
+    next()
+}
+
 app.get('/', (req, res) => {
     res.render('layout', {
         content: 'index'
     })
 })
 
-app.get('/login', (req, res) => {
+app.get('/login', requireGuest, (req, res) => {
     res.render('layout', {
         content: 'login'
     })
@@ -73,9 +91,48 @@ app.get('/register', (req, res) => {
     })
 })
 
-app.get('/dashboard', requireLogin, (req, res) => {
+app.get('/dashboard', requireLogin, async (req, res) => {
+    const userId = req.session.user.id
+    const pantryItems = `
+        SELECT pi.id, i.name, pi.quantity, pi.unit, pi.expirationDate
+        FROM fp_pantry_items pi
+        JOIN fp_ingredients i
+            ON pi.ingredientId = i.id
+        WHERE pi.userId = ?
+    `
+    const gLists = `
+        SELECT gl.id, gl.name as listName, gi.itemName, gi.quantity
+        FROM fp_grocery_items gi
+        JOIN fp_grocery_lists gl
+            ON gi.groceryListId = gl.id
+        WHERE gl.userId = ?
+    `
+    const [groceryLists] = await db.query(gLists, [userId])
+
+    const lists = []
+
+    for (const list of groceryLists) {
+        let existingList = lists.find(item => item.name === list.listName)
+        if (!existingList) {
+            existingList = {
+                id: list.id,
+                name: list.listName,
+                items: []
+            }
+
+            lists.push(existingList)
+        }
+        existingList.items.push({
+            name: list.itemName,
+            quantity: list.quantity
+        })
+    }
+
+    const [items] = await db.query(pantryItems, [userId])
     res.render('layout', {
-        content: 'dashboard'
+        content: 'dashboard',
+        pantryItems: items,
+        groceries: lists
     })
 })
 
@@ -180,6 +237,86 @@ app.get('/food-search', (req, res) => {
 // post requests
 app.post('/register', registerUser)
 app.post('/login', loginUser)
+
+// NOTE: this function does two things, it inserts ingredients in ingredient table
+// and pantry item in pantry table, the ingredients table is a general table
+// that holds all ingredients and the pantry table is the pantry per user
+// the dashboard shows ingredients that belong to a user in their "pantry"
+// so in order to adhere to the db architecture two inserts are necessary
+app.post('/ingredients/add', requireLogin, async (req, res) => {
+    try {
+        const userId = req.session.user.id
+        const { ingredientName, description, quantity, unit, expiration } = req.body
+        // Check if ingredient already exists
+        const [existing] = await db.execute(
+            `SELECT id
+            FROM fp_ingredients
+            WHERE name = ?`,
+            [ingredientName]
+        )
+
+        let ingredientId
+
+        if (existing.length > 0) {
+            ingredientId = existing[0].id
+        } else {
+            const ingredientsInsert = `
+                INSERT INTO fp_ingredients (name, description)
+                VALUES (?, ?)
+            `
+            const [result] = await db.execute(ingredientsInsert, [ingredientName, description])
+            ingredientId = result.insertId
+        }
+
+        // Check if this ingredient is already in the user's pantry
+        const [pantryItem] = await db.execute(
+            `SELECT id FROM fp_pantry_items
+            WHERE userId = ? AND ingredientId = ?`,
+            [userId, ingredientId]
+        )
+        if (pantryItem.length > 0) {
+            // Update existing pantry item
+            await db.execute(
+                `UPDATE fp_pantry_items
+                SET quantity = ?, unit = ?, expirationDate = ? WHERE id = ?`,
+                [quantity, unit, expiration, pantryItem[0].id]
+            )
+        } else {
+            // Insert new pantry item
+            await db.execute(
+                `INSERT INTO fp_pantry_items
+                 (userId, ingredientId, quantity, unit, expirationDate)
+                 VALUES (?, ?, ?, ?, ?)`,
+                [userId, ingredientId, quantity, unit, expiration]
+            )
+        }
+        res.redirect('/dashboard')
+    } catch (error) {
+        console.error(error)
+        res.status(500).send('Invalid')
+    }
+})
+
+app.post('/ingredients/delete/:id', requireLogin, async (req, res) => {
+    const userId = req.session.user.id
+    const id = req.params.id
+    await db.execute(`
+        DELETE FROM fp_pantry_items
+        WHERE id = ? AND userId = ?
+    `, [id, userId])
+    res.redirect('/dashboard')
+})
+
+app.post('/groceries/delete/:id', requireLogin, async (req, res) => {
+    const userId = req.session.user.id
+    const id = req.params.id
+    await db.execute(`
+        DELETE FROM fp_grocery_lists
+        WHERE id = ? AND userId = ?
+    `, [id, userId])
+    res.redirect('/dashboard')
+})
+
 app.get('/api/usda-foods', async (req, res) => {
     const query = req.query.query?.trim()
 
@@ -253,11 +390,74 @@ app.get('/api/usda-foods', async (req, res) => {
     }
 })
 
+// PUT REQUESTS
+app.put('/ingredients/edit/:id', requireLogin, async (req, res) => {
+    try {
+        const userId = req.session.user.id
+        const pantryItemId = req.params.id
+
+        const { ingredientName, description, quantity, unit, expiration } = req.body
+
+        // Check if ingredient already exists
+        const [existing] = await db.execute(
+            `SELECT id
+             FROM fp_ingredients
+             WHERE name = ?`,
+            [ingredientName]
+        )
+
+        let ingredientId
+
+        if (existing.length > 0) {
+            ingredientId = existing[0].id
+
+            // Update the description in case it changed
+            await db.execute(
+                `UPDATE fp_ingredients
+                 SET description = ?
+                 WHERE id = ?`,
+                [description, ingredientId]
+            )
+        } else {
+            const [result] = await db.execute(
+                `INSERT INTO fp_ingredients (name, description)
+                 VALUES (?, ?)`,
+                [ingredientName, description]
+            )
+
+            ingredientId = result.insertId
+        }
+
+        // Update the pantry item
+        await db.execute(
+            `UPDATE fp_pantry_items
+             SET ingredientId = ?,
+                 quantity = ?,
+                 unit = ?,
+                 expirationDate = ?
+             WHERE id = ? AND userId = ?`,
+            [
+                ingredientId,
+                quantity,
+                unit,
+                expiration,
+                pantryItemId,
+                userId
+            ]
+        )
+
+        res.redirect('/dashboard')
+    } catch (error) {
+        console.error(error)
+        res.status(500).send('Invalid')
+    }
+})
+
 // used for vercel deployment, local development uses port 3000
 // otherwise let vercel handle environment
 if (process.env.VERCEL !== '1') {
     app.listen(PORT, () => {
-        console.log(`Express server running at port: ${PORT}`)
+        console.info(`Express server running at port: ${PORT}`)
     })
 }
 

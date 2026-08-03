@@ -22,6 +22,9 @@ export async function registerUser(req, res) {
 }
 
 export async function loginUser(req, res) {
+    // test logins: email, pw
+    // admin@test.com, admin@test.com
+    // user@test.com, user@test.com
     try {
         const { email, password } = req.body
         const query = `
