@@ -4,7 +4,6 @@ import { db } from '../../db/db.mjs'
 export async function registerUser(req, res) {
     try {
         const { firstName, lastName, email, password } = req.body
-        console.log(firstName, lastName, email)
         // salt rounds for bcrypt
         const rounds = 10
         const hashedPassword = await bcrypt.hash(password, rounds)

@@ -2,7 +2,6 @@
 // elements. TODO: refactor this out to its own module for scalability,
 // dependent on behavior or editing user flow
 
-const editPantry = document.querySelector('.edit-pantry')
 const form = document.querySelector('#ingredientForm')
 const method = form?.querySelector('[name="_method"]')
 
