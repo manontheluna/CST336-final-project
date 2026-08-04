@@ -101,7 +101,7 @@ app.get('/dashboard', requireLogin, async (req, res) => {
         WHERE pi.userId = ?
     `
     const gLists = `
-        SELECT gl.id, gl.name as listName, gi.itemName, gi.quantity
+        SELECT gl.id, gl.name as listName, gl.isCompleted, gi.itemName, gi.quantity
         FROM fp_grocery_items gi
         JOIN fp_grocery_lists gl
             ON gi.groceryListId = gl.id
@@ -117,6 +117,7 @@ app.get('/dashboard', requireLogin, async (req, res) => {
             existingList = {
                 id: list.id,
                 name: list.listName,
+                isCompleted: list.isCompleted,
                 items: []
             }
 
@@ -315,6 +316,25 @@ app.post('/groceries/delete/:id', requireLogin, async (req, res) => {
         WHERE id = ? AND userId = ?
     `, [id, userId])
     res.redirect('/dashboard')
+})
+
+app.put('/api/groceries/completed/:id', async (req, res) => {
+    try {
+        const id = req.params.id
+        const { isCompleted } = req.body
+        const query = `
+            UPDATE fp_grocery_lists
+            SET isCompleted = ?
+            WHERE id = ?
+        `
+        await db.query(query, [isCompleted, id])
+        res.json({
+            success: true
+        })
+    } catch (err) {
+        console.error(err)
+        res.status(500).json(err.message)
+    }
 })
 
 app.get('/api/usda-foods', async (req, res) => {

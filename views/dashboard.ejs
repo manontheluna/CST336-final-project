@@ -33,7 +33,18 @@
             <% for(let item of groceries) { %>
                 <li>
                     <div>
-                        <%= item.name %>
+                        <span>
+                            <%= item.name %>
+                        </span>
+                        <label>
+                            Completed:
+                            <input
+                                class="completed"
+                                type="checkbox"
+                                name="<%= item.id %>"
+                                <%= item.isCompleted ? 'checked' : '' %>
+                            >
+                        </label>
                         <% for (let i of item.items) { %>
                             <div>
                                 <%= i.name %>
