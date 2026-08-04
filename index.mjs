@@ -102,9 +102,8 @@ app.get('/dashboard', requireLogin, async (req, res) => {
     `
     const gLists = `
         SELECT gl.id, gl.name as listName, gl.isCompleted, gi.itemName, gi.quantity, gi.unit
-        FROM fp_grocery_items gi
-        JOIN fp_grocery_lists gl
-            ON gi.groceryListId = gl.id
+        FROM fp_grocery_lists gl
+        LEFT JOIN fp_grocery_items gi ON gi.groceryListId = gl.id
         WHERE gl.userId = ?
     `
     const [groceryLists] = await db.query(gLists, [userId])
@@ -129,6 +128,7 @@ app.get('/dashboard', requireLogin, async (req, res) => {
             unit: list.unit
         })
     }
+
     const [items] = await db.query(pantryItems, [userId])
     res.render('layout', {
         content: 'dashboard',

@@ -100,22 +100,20 @@
                         </label>
                         <button>Add New List Item</button>
                     </form>
-                    <strong>Add New Grocery List</strong>
-                    <form action="/groceries/add" method="POST">
-                        <label for="name">
-                            Grocery List Name
-                            <input id="name" type="text" name="name" />
-                        </label>
-                        <button>Add New Grocery List</button>
-                    </form>
-                    <form action="/groceries/edit" method="POST">
-                        <button>Edit</button>
-                    </form>
                     <form action="/groceries/delete/<%= item.id %>" method="POST">
-                        <button>Delete</button>
+                        <button>Delete List</button>
                     </form>
                 </li>
             <% } %>
         </ul>
+        <hr>
+        <strong>Add New Grocery List</strong>
+        <form action="/groceries/add" method="POST">
+            <label for="name">
+                Grocery List Name
+                <input id="name" type="text" name="name" />
+            </label>
+            <button>Add New Grocery List</button>
+        </form>
     </div>
 </div>
