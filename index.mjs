@@ -308,6 +308,17 @@ app.post('/ingredients/delete/:id', requireLogin, async (req, res) => {
     res.redirect('/dashboard')
 })
 
+app.post('/groceries/add', requireLogin, async (req, res) => {
+    const userId = req.session.user.id
+    const { name } = req.body
+    const query = `
+        INSERT INTO fp_grocery_lists (userId, name, isCompleted)
+        VALUES (?, ?, ?)
+    `
+    await db.execute(query, [userId, name, 0])
+    res.redirect('/dashboard')
+})
+
 app.post('/groceries/delete/:id', requireLogin, async (req, res) => {
     const userId = req.session.user.id
     const id = req.params.id

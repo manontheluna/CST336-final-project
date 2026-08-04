@@ -51,6 +51,13 @@
                             </div>
                         <% } %>
                     </div>
+                    <form action="/groceries/add" method="POST">
+                        <label for="name">
+                            Grocery List Name
+                            <input id="name" type="text" name="name" />
+                        </label>
+                        <button>Add New Grocery List</button>
+                    </form>
                     <form action="/groceries/edit" method="POST">
                         <button>Edit</button>
                     </form>
