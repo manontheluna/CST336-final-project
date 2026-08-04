@@ -101,7 +101,7 @@ app.get('/dashboard', requireLogin, async (req, res) => {
         WHERE pi.userId = ?
     `
     const gLists = `
-        SELECT gl.id, gl.name as listName, gl.isCompleted, gi.itemName, gi.quantity
+        SELECT gl.id, gl.name as listName, gl.isCompleted, gi.itemName, gi.quantity, gi.unit
         FROM fp_grocery_items gi
         JOIN fp_grocery_lists gl
             ON gi.groceryListId = gl.id
@@ -125,10 +125,10 @@ app.get('/dashboard', requireLogin, async (req, res) => {
         }
         existingList.items.push({
             name: list.itemName,
-            quantity: list.quantity
+            quantity: list.quantity,
+            unit: list.unit
         })
     }
-
     const [items] = await db.query(pantryItems, [userId])
     res.render('layout', {
         content: 'dashboard',
@@ -346,6 +346,50 @@ app.put('/api/groceries/completed/:id', async (req, res) => {
         console.error(err)
         res.status(500).json(err.message)
     }
+})
+
+app.post('/api/grocery-items/add/', async (req, res) => {
+    const { id: gListId, name, quantity, unit } = req.body
+    const ingredientQuery = `
+        SELECT * FROM fp_ingredients
+    `
+    const [ingredients] = await db.query(ingredientQuery)
+    const existing = ingredients.find(ing => ing.name === name)
+    if (existing) {
+        const id = existing.id
+        const insertExistingQuery = `
+            INSERT INTO fp_grocery_items (
+                groceryListId,
+                ingredientId,
+                itemName,
+                quantity,
+                unit,
+                isPurchased
+            ) VALUES (?, ?, ?, ?, ?, ?)
+        `
+        await db.execute(insertExistingQuery, [gListId, id, name, quantity, unit, 0])
+    } else {
+        // add non existent ingredient and grocery item
+        // add to ingredient table
+        const insertIngredientQuery = `
+            INSERT INTO fp_ingredients (name) VALUES (?)
+        `
+        const [ingredient] = await db.query(insertIngredientQuery, [name])
+        const ingId = ingredient.id
+        // insert into grocery list
+        const insertExistingQuery = `
+            INSERT INTO fp_grocery_items (
+                groceryListId,
+                ingredientId,
+                itemName,
+                quantity,
+                unit,
+                isPurchased
+            ) VALUES (?, ?, ?, ?, ?, ?)
+        `
+        await db.execute(insertExistingQuery, [gListId, ingId, name, quantity, unit, 0])
+    }
+    res.redirect('/dashboard')
 })
 
 app.get('/api/usda-foods', async (req, res) => {
