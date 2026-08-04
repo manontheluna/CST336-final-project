@@ -1,7 +1,8 @@
 export function validatePantryItem(item) {
     const errors = {}
-    const name = item.name?.trim()
+    const name = (item.ingredientName ?? item.name)?.trim()
     const quantity = Number(item.quantity)
+    const expirationDate = item.expiration ?? item.expirationDate
 
     if (!name) {
         errors.name = 'Item name is required.'
@@ -11,25 +12,24 @@ export function validatePantryItem(item) {
         errors.quantity = 'Quantity must be greater than zero.'
     }
 
-    if (!item.category) {
+    if ('category' in item && !item.category) {
         errors.category = 'Category is required.'
     }
 
-    if (!item.expirationDate) {
+    if (!expirationDate) {
         errors.expirationDate = 'Expiration date is required.'
-    } else if (!isValidDate(item.expirationDate)) {
+    } else if (!isValidDate(expirationDate)) {
         errors.expirationDate = 'Enter a valid expiration date.'
     }
 
     if (
         item.purchaseDate &&
-        item.expirationDate &&
-        item.purchaseDate > item.expirationDate
+        expirationDate &&
+        item.purchaseDate > expirationDate
     ) {
         errors.expirationDate =
             'Expiration date cannot be before the purchase date.'
     }
-
     
     return {
         isValid: Object.keys(errors).length === 0,
