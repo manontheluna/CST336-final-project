@@ -21,7 +21,6 @@ document.querySelectorAll('.edit-pantry').forEach(button => {
 })
 
 const completedCheckBox = document.querySelectorAll('.completed')
-console.log(completedCheckBox)
 
 completedCheckBox.forEach(input => {
     input.addEventListener('change', async e => {
