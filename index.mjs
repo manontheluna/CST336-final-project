@@ -101,10 +101,9 @@ app.get('/dashboard', requireLogin, async (req, res) => {
         WHERE pi.userId = ?
     `
     const gLists = `
-        SELECT gl.id, gl.name as listName, gi.itemName, gi.quantity
-        FROM fp_grocery_items gi
-        JOIN fp_grocery_lists gl
-            ON gi.groceryListId = gl.id
+        SELECT gl.id, gl.name as listName, gl.isCompleted, gi.itemName, gi.quantity, gi.unit
+        FROM fp_grocery_lists gl
+        LEFT JOIN fp_grocery_items gi ON gi.groceryListId = gl.id
         WHERE gl.userId = ?
     `
     const [groceryLists] = await db.query(gLists, [userId])
@@ -117,6 +116,7 @@ app.get('/dashboard', requireLogin, async (req, res) => {
             existingList = {
                 id: list.id,
                 name: list.listName,
+                isCompleted: list.isCompleted,
                 items: []
             }
 
@@ -124,7 +124,8 @@ app.get('/dashboard', requireLogin, async (req, res) => {
         }
         existingList.items.push({
             name: list.itemName,
-            quantity: list.quantity
+            quantity: list.quantity,
+            unit: list.unit
         })
     }
 
@@ -307,6 +308,17 @@ app.post('/ingredients/delete/:id', requireLogin, async (req, res) => {
     res.redirect('/dashboard')
 })
 
+app.post('/groceries/add', requireLogin, async (req, res) => {
+    const userId = req.session.user.id
+    const { name } = req.body
+    const query = `
+        INSERT INTO fp_grocery_lists (userId, name, isCompleted)
+        VALUES (?, ?, ?)
+    `
+    await db.execute(query, [userId, name, 0])
+    res.redirect('/dashboard')
+})
+
 app.post('/groceries/delete/:id', requireLogin, async (req, res) => {
     const userId = req.session.user.id
     const id = req.params.id
@@ -314,6 +326,70 @@ app.post('/groceries/delete/:id', requireLogin, async (req, res) => {
         DELETE FROM fp_grocery_lists
         WHERE id = ? AND userId = ?
     `, [id, userId])
+    res.redirect('/dashboard')
+})
+
+app.put('/api/groceries/completed/:id', requireLogin, async (req, res) => {
+    try {
+        const userId = req.session.user.id
+        const id = req.params.id
+        const { isCompleted } = req.body
+        const query = `
+            UPDATE fp_grocery_lists
+            SET isCompleted = ?
+            WHERE id = ? AND userId = ?
+        `
+        await db.query(query, [isCompleted, id, userId])
+        res.json({
+            success: true
+        })
+    } catch (err) {
+        console.error(err)
+        res.status(500).json(err.message)
+    }
+})
+
+app.post('/api/grocery-items/add/', requireLogin, async (req, res) => {
+    const { id: gListId, name, quantity, unit } = req.body
+    const ingredientQuery = `
+        SELECT * FROM fp_ingredients
+    `
+    const [ingredients] = await db.query(ingredientQuery)
+    const existing = ingredients.find(ing => ing.name === name)
+    if (existing) {
+        const id = existing.id
+        const insertExistingQuery = `
+            INSERT INTO fp_grocery_items (
+                groceryListId,
+                ingredientId,
+                itemName,
+                quantity,
+                unit,
+                isPurchased
+            ) VALUES (?, ?, ?, ?, ?, ?)
+        `
+        await db.execute(insertExistingQuery, [gListId, id, name, quantity, unit, 0])
+    } else {
+        // add non existent ingredient and grocery item
+        // add to ingredient table
+        const insertIngredientQuery = `
+            INSERT INTO fp_ingredients (name) VALUES (?)
+        `
+        const [ingredient] = await db.query(insertIngredientQuery, [name])
+        const ingId = ingredient.insertId
+        // insert into grocery list
+        const insertQuery = `
+            INSERT INTO fp_grocery_items (
+                groceryListId,
+                ingredientId,
+                itemName,
+                quantity,
+                unit,
+                isPurchased
+            ) VALUES (?, ?, ?, ?, ?, ?)
+        `
+        await db.execute(insertQuery, [gListId, ingId, name, quantity, unit, 0])
+    }
     res.redirect('/dashboard')
 })
 

@@ -19,3 +19,22 @@ document.querySelectorAll('.edit-pantry').forEach(button => {
         method.value = 'PUT'
     })
 })
+
+const completedCheckBox = document.querySelectorAll('.completed')
+
+completedCheckBox.forEach(input => {
+    input.addEventListener('change', async e => {
+        const id = e.target.name
+        const isCompleted = e.target.checked
+        const response = await fetch(`/api/groceries/completed/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                isCompleted
+            })
+        })
+        const result = await response.json()
+    })
+})

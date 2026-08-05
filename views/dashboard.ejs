@@ -27,29 +27,6 @@
             <% } %>
         </ul>
     </div>
-    <div class="groceries">
-        <strong>Grocery Lists</strong>
-        <ul class="grocery-lists">
-            <% for(let item of groceries) { %>
-                <li>
-                    <div>
-                        <%= item.name %>
-                        <% for (let i of item.items) { %>
-                            <div>
-                                <%= i.name %>
-                            </div>
-                        <% } %>
-                    </div>
-                    <form action="/groceries/edit" method="POST">
-                        <button>Edit</button>
-                    </form>
-                    <form action="/groceries/delete/<%= item.id %>" method="POST">
-                        <button>Delete</button>
-                    </form>
-                </li>
-            <% } %>
-        </ul>
-    </div>
     <div class="add-new-ingredient">
         Add/Update new ingredient
         <form id="ingredientForm" action="/ingredients/add" method="POST">
@@ -62,6 +39,7 @@
             <input type="number" name="quantity" placeholder="Quantity">
             <label>Unit</label>
             <select name="unit">
+                <option value="block">block</option>
                 <option value="count">count</option>
                 <option value="lbs">lbs</option>
                 <option value="oz">oz</option>
@@ -70,6 +48,72 @@
             <label>Expiration Date</label>
             <input type="date" name="expiration">
             <button type="submit">Add</button>
+        </form>
+    </div>
+    <hr>
+    <div class="groceries">
+        <strong>Grocery Lists</strong>
+        <ul class="grocery-lists">
+            <% for(let item of groceries) { %>
+                <li>
+                    <div>
+                        <strong>
+                            <%= item.name %>
+                        </strong>
+                        <label>
+                            Completed:
+                            <input
+                                class="completed"
+                                type="checkbox"
+                                name="<%= item.id %>"
+                                <%= item.isCompleted ? 'checked' : '' %>
+                            >
+                        </label>
+                        <% for (let i of item.items) { %>
+                            <div>
+                                <%= i.name %>
+                                <%= i.quantity %>
+                                <%= i.unit %>
+                            </div>
+                        <% } %>
+                    </div>
+                    <strong>Add New Item to List</strong>
+                    <form action="/api/grocery-items/add/" method="POST">
+                        <input type="hidden" name="id" value="<%= item.id %>" />
+                        <label>
+                            Item Name
+                            <input type="text" name="name" />
+                        </label>
+                        <label>
+                            Quantity
+                            <input type="number" name="quantity" />
+                        </label>
+                        <label>
+                            Unit
+                            <select name="unit">
+                                <option value="block">block</option>
+                                <option value="count">count</option>
+                                <option value="lbs">lbs</option>
+                                <option value="oz">oz</option>
+                                <option value="gallons">gallons</option>
+                            </select>
+                        </label>
+                        <button>Add New List Item</button>
+                    </form>
+                    <form action="/groceries/delete/<%= item.id %>" method="POST">
+                        <button>Delete List</button>
+                    </form>
+                </li>
+            <% } %>
+        </ul>
+        <hr>
+        <strong>Add New Grocery List</strong>
+        <form action="/groceries/add" method="POST">
+            <label for="name">
+                Grocery List Name
+                <input id="name" type="text" name="name" />
+            </label>
+            <button>Add New Grocery List</button>
         </form>
     </div>
 </div>
