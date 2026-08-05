@@ -376,9 +376,9 @@ app.post('/api/grocery-items/add/', requireLogin, async (req, res) => {
             INSERT INTO fp_ingredients (name) VALUES (?)
         `
         const [ingredient] = await db.query(insertIngredientQuery, [name])
-        const ingId = ingredient.id
+        const ingId = ingredient.insertId
         // insert into grocery list
-        const insertExistingQuery = `
+        const insertQuery = `
             INSERT INTO fp_grocery_items (
                 groceryListId,
                 ingredientId,
@@ -388,7 +388,7 @@ app.post('/api/grocery-items/add/', requireLogin, async (req, res) => {
                 isPurchased
             ) VALUES (?, ?, ?, ?, ?, ?)
         `
-        await db.execute(insertExistingQuery, [gListId, ingId, name, quantity, unit, 0])
+        await db.execute(insertQuery, [gListId, ingId, name, quantity, unit, 0])
     }
     res.redirect('/dashboard')
 })
