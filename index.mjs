@@ -329,7 +329,7 @@ app.post('/groceries/delete/:id', requireLogin, async (req, res) => {
     res.redirect('/dashboard')
 })
 
-app.put('/api/groceries/completed/:id', async (req, res) => {
+app.put('/api/groceries/completed/:id', requireLogin, async (req, res) => {
     try {
         const id = req.params.id
         const { isCompleted } = req.body
@@ -348,7 +348,7 @@ app.put('/api/groceries/completed/:id', async (req, res) => {
     }
 })
 
-app.post('/api/grocery-items/add/', async (req, res) => {
+app.post('/api/grocery-items/add/', requireLogin, async (req, res) => {
     const { id: gListId, name, quantity, unit } = req.body
     const ingredientQuery = `
         SELECT * FROM fp_ingredients
