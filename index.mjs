@@ -331,14 +331,15 @@ app.post('/groceries/delete/:id', requireLogin, async (req, res) => {
 
 app.put('/api/groceries/completed/:id', requireLogin, async (req, res) => {
     try {
+        const userId = req.session.user.id
         const id = req.params.id
         const { isCompleted } = req.body
         const query = `
             UPDATE fp_grocery_lists
             SET isCompleted = ?
-            WHERE id = ?
+            WHERE id = ? AND userId = ?
         `
-        await db.query(query, [isCompleted, id])
+        await db.query(query, [isCompleted, id, userId])
         res.json({
             success: true
         })
