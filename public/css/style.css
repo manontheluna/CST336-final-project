@@ -904,6 +904,7 @@ Register link
 
 .register-link a:hover {
     text-decoration: underline;
+}
 
 nav {
     background: var(--light-gray);
@@ -931,6 +932,8 @@ nav {
 
 .pantry-items li {
     display: flex;
+}
+
 .login-link {
     margin-top: 1.5rem;
     text-align: center;
