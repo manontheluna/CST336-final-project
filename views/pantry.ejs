@@ -1,0 +1,20 @@
+<div class="pantry">
+    <ul>
+        <% for (const item of items) { %>
+            <li>
+                <h3>
+                    <%= item.name %>
+                </h3>
+                <span>
+                    <%= item.quantity %>
+                </span>
+                <span>
+                    <%= item.unit %>
+                </span>
+                <small>
+                    <%= item.expirationDate %>
+                </small>
+            </li>
+        <% } %>
+    </ul>
+</div>

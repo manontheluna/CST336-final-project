@@ -137,6 +137,23 @@ app.get('/dashboard', requireLogin, async (req, res) => {
     })
 })
 
+app.get('/pantry', requireLogin, async (req, res) => {
+    const id = req.session.user.id
+    const pantryItemsQuery = `
+        SELECT pi.id, i.name, pi.quantity, pi.unit, pi.expirationDate
+        FROM fp_pantry_items pi
+        JOIN fp_ingredients i
+            ON pi.ingredientId = i.id
+        WHERE pi.userId = ?
+    `
+    const [pantryItems] = await db.query(pantryItemsQuery, [id])
+    console.log(pantryItems)
+    res.render('layout', {
+        content: 'pantry',
+        items: pantryItems
+    })
+})
+
 app.get('/api/users', async (req, res) => {
     const query = `
         SELECT * FROM fp_users
