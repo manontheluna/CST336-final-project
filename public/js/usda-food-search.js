@@ -85,8 +85,10 @@ function createFoodCard(food) {
 
     selectButton.addEventListener('click', () => {
         document.querySelectorAll('.food-result button').forEach(button => {
-        button.textContent = 'Use this food'
+            button.textContent = 'Use this food'
         })
+
+        localStorage.setItem('selectedUsdaFood', JSON.stringify(food))
 
         document.dispatchEvent(new CustomEvent('usda-food-selected', {
             detail: food

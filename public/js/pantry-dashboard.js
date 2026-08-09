@@ -8,6 +8,7 @@ function setupPantryDashboard() {
     const pantryForm = document.querySelector('#ingredientForm')
 
     showExpirationStatuses()
+    loadSelectedUsdaFood()
 
     if (!pantryForm) {
         return
@@ -126,4 +127,19 @@ function showExpirationStatuses() {
 
         item.appendChild(badge)
     })
+}
+
+function loadSelectedUsdaFood() {
+    const savedFood = localStorage.getItem('selectedUsdaFood')
+
+    if (!savedFood) {
+        return
+    }
+
+    const food = JSON.parse(savedFood)
+    const nameField = document.querySelector('[name="ingredientName"]')
+
+    if (nameField) {
+        nameField.value = food.name
+    }
 }
