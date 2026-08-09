@@ -1,9 +1,13 @@
 import { validatePantryItem } from './pantry-validation.js'
+import { calculateExpirationStatus } from './pantry-expiration.js'
 
 document.addEventListener('DOMContentLoaded', setupPantryDashboard)
+document.addEventListener('usda-food-selected', handleUsdaFoodSelected)
 
 function setupPantryDashboard() {
     const pantryForm = document.querySelector('#ingredientForm')
+
+    showExpirationStatuses()
 
     if (!pantryForm) {
         return
@@ -94,4 +98,32 @@ function addErrorMessage(errorList, message) {
 function clearFormErrors(event) {
     const form = event.currentTarget
     clearValidationErrors(form)
+}
+
+function handleUsdaFoodSelected(event) {
+    const food = event.detail
+    const nameField = document.querySelector('[name="ingredientName"]')
+
+    if (nameField) {
+        nameField.value = food.name
+    }
+}
+
+function showExpirationStatuses() {
+    document.querySelectorAll('.pantry-items li').forEach(item => {
+        const expirationText = item.querySelector('span:last-of-type')
+
+        if (!expirationText) {
+            return
+        }
+
+        const result = calculateExpirationStatus(expirationText.textContent)
+        const status = typeof result === 'string' ? result : result.status
+
+        const badge = document.createElement('span')
+        badge.textContent = status
+        badge.classList.add('expiration-status')
+
+        item.appendChild(badge)
+    })
 }

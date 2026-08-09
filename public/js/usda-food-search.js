@@ -79,7 +79,30 @@ function createFoodCard(food) {
 
     const nutrientList = createNutrientList(food.nutrients)
 
-    foodCard.append(name, brand, category, serving, nutrientList)
+    const selectButton = document.createElement('button')
+    selectButton.type = 'button'
+    selectButton.textContent = 'Use this food'
+
+    selectButton.addEventListener('click', () => {
+        document.querySelectorAll('.food-result button').forEach(button => {
+        button.textContent = 'Use this food'
+        })
+
+        document.dispatchEvent(new CustomEvent('usda-food-selected', {
+            detail: food
+        }))
+
+        selectButton.textContent = 'Selected'
+})
+
+    foodCard.append(
+        name,
+        brand,
+        category,
+        serving,
+        nutrientList,
+        selectButton
+    )
 
     return foodCard
 }
