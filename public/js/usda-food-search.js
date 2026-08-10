@@ -95,6 +95,7 @@ function createFoodCard(food) {
         }))
 
         selectButton.textContent = 'Selected'
+        window.location.href = '/pantry'
 })
 
     foodCard.append(

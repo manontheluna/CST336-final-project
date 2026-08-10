@@ -149,6 +149,7 @@ function loadSelectedUsdaFood() {
 
     if (nameField) {
         nameField.value = food.name
+        localStorage.removeItem('selectedUsdaFood')
     }
 }
 
