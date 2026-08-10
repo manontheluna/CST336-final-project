@@ -904,33 +904,37 @@ Register link
 
 .register-link a:hover {
     text-decoration: underline;
+}
 
 nav {
     background: var(--light-gray);
 }
 
-/* PANTRY */
-.add-new-ingredient form {
+PANTRY .add-new-ingredient form {
     display: flex;
     flex-direction: column;
-    max-width: calc(100% / 3);
 }
 
-.groceries {
-    border: 1px dashed black;
+
+/* Styles the form labels */
+.add-new-ingredient label {
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
 }
 
-.grocery-lists li {
-    border: 1px dashed lightblue;
-    display: flex;
+/*Styles the ingredient form inputs and dropdown.*/
+.add-new-ingredient input,
+.add-new-ingredient select {
+    width: 100%;
+    padding: 0.8rem;
+    border: 0.0625rem solid #cccccc;
+    border-radius: 0.5rem;
+    font-family: inherit;
+    font-size: 1rem;
 }
 
-.pantry {
-    border: 1px dashed black;
-}
 
-.pantry-items li {
-    display: flex;
 .login-link {
     margin-top: 1.5rem;
     text-align: center;
@@ -944,4 +948,323 @@ nav {
 
 .login-link a:hover {
     text-decoration: underline;
+}
+
+/* Main dashboard container. Keeps the dashboard centered */
+.dashboard {
+    width: 92%;
+    max-width: 75rem;
+    margin: auto;
+    padding: 2.5ren 0 4rem 0;
+}
+
+/* Dashboard header that contains the user's 
+information and logout button */
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding: 2rem;
+    background-color: #f3f7ef;
+    border: 0.0625rem solid #dde6d8;
+    border-radius: 1rem;
+}
+
+/* Creates a two coloumn layout for the dashboard */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: .9fr 1.1fr;
+    gap: 2rem;
+    align-items: start;
+    margin-top: 2rem;
+}
+
+/*Shared card styling for each dashboard section.*/
+.dashboard-card {
+    padding: 1.75rem;
+    background-color: white;
+    border: 0.0625rem solid #dde6d8;
+    border-radius: 1rem;
+    box-shadow: 0 0.5rem 1.5rem rgba(44, 70, 40, .08);
+}
+
+
+
+.groceries {
+    grid-column: 1 / -1;
+}
+
+/* User infromation shown in the header */
+.dashboard-user-info h1 {
+    margin-bottom: 0.4rem;
+    color: #2f5f35;
+    font-size: 2rem;
+}
+
+.dashboard-user-info p {
+    color: #667068;
+}
+
+/* Logout button */
+.dashboard-logout {
+    padding: 0.75rem 1.25rem;
+    color: #4f873f;
+    background-color: white;
+    border: 0.0625rem solid #b7cbae;
+    border-radius: 0.5rem;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.dashboard-logout:hover {
+    background-color: #edf4e9;
+}
+
+/* Dashboard Primary Buttons */
+
+/*Styles the main action buttons used throughout
+the dashboard.*/
+.dashboard-primary-button {
+    width: 100%;
+    margin-top: 1.5rem;
+    padding: 0.9rem;
+    color: white;
+    background-color: #4f873f;
+    border: none;
+    border-radius: 0.75rem;
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/*Changes the button color when the user
+moves the mouse over it.*/
+.dashboard-primary-button:hover {
+    background-color: #3d6d31;
+}
+
+/* Pantry Items */
+
+/*Removes the default bullets and spacingfrom the pantry list.*/
+.pantry-items {
+    list-style: none;
+    margin-top: 1rem;
+    padding: 0;
+}
+
+/*Each pantry item becomes its own row.*/
+.pantry-items li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    padding: 1rem 0;
+    border-bottom: 0.0625rem solid #e5ebe1;
+}
+
+/*Removes the border from the last pantry item.*/
+.pantry-items li:last-child {
+    border-bottom: none;
+}
+
+/*Styles the Edit button.*/
+.edit-pantry {
+    padding: 0.55rem 0.9rem;
+    color: white;
+    background-color: #4f873f;
+    border: none;
+    border-radius: 0.5rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.edit-pantry:hover {
+    background-color: #3d6d31;
+}
+
+/*Styles the Delete buttons.*/
+.dashboard-delete-button {
+    padding: 0.55rem 0.9rem;
+    color: #8a3f32;
+    background-color: #fff5f2;
+    border: 0.0625rem solid #e2b9b0;
+    border-radius: 0.5rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.dashboard-delete-button:hover {
+    background-color: #fbe7e2;
+}
+
+/* Grocery List Section */
+
+/*Adds spacing above the grocery lists.*/
+.grocery-lists {
+    list-style: none;
+    margin-top: 1rem;
+    padding: 0;
+}
+
+
+/*Styles each grocery list as its own card.*/
+.grocery-list-card {
+    margin-bottom: 1.5rem;
+    padding: 1.5rem;
+    background-color: #f7f9f5;
+    border: 0.0625rem solid #dde6d8;
+    border-radius: 0.75rem;
+    background: white;
+    box-shadow:0 .3rem 1rem rgba(44,70,40,.08);
+}
+
+
+/*Styles the grocery list name.*/
+.grocery-list-card > div > strong {
+    display: block;
+
+    margin-bottom: 0.75rem;
+
+    color: #2f5f35;
+
+    font-size: 1.2rem;
+}
+
+
+/*Adds space around the completed checkbox area.*/
+.grocery-list-card > div > label {
+    display: block;
+
+    margin-bottom: 1rem;
+
+    font-weight: bold;
+}
+
+
+/*Styles each item already inside the grocery list.*/
+.grocery-list-item {
+    display: flex;
+    justify-content: space-between;
+
+    margin-top: 0.5rem;
+    padding: 0.7rem 0.9rem;
+
+    background-color: white;
+
+    border: 0.0625rem solid #e5ebe1;
+    border-radius: 0.5rem;
+}
+
+
+/*Adds spacing before the Add New Item section.*/
+.grocery-list-card > strong {
+    display: block;
+
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+
+    color: #334037;
+
+    font-size: 1rem;
+}
+
+
+/*Stacks the grocery item form neatly*/
+.grocery-list-card form {
+    margin-top: 0.75rem;
+}
+
+
+/*Styles the labels inside the grocery list forms.*/
+.grocery-list-card form label {
+    display: block;
+
+    margin-top: 0.75rem;
+    margin-bottom: 0.35rem;
+
+    font-weight: bold;
+}
+
+
+/*Styles the grocery item inputs and dropdown.*/
+.grocery-list-card form input,
+.grocery-list-card form select {
+    width: 100%;
+
+    padding: 0.75rem;
+
+    border: 0.0625rem solid #cccccc;
+    border-radius: 0.5rem;
+
+    font-family: inherit;
+    font-size: 1rem;
+}
+
+
+/* Add New Grocery List */
+
+/*Separates the add-new-list area from existing grocery lists.*/
+.new-grocery-list {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+
+    border-top: 0.0625rem solid #dde6d8;
+}
+
+
+/*Styles the Add New Grocery List heading.*/
+.new-grocery-list > strong {
+    display: block;
+
+    margin-bottom: 1rem;
+
+    color: #2f5f35;
+
+    font-size: 1.2rem;
+}
+
+
+/*Stacks the new grocery list form vertically.*/
+.new-grocery-list form {
+    display: flex;
+    flex-direction: column;
+}
+
+
+/*Styles the grocery list name label.*/
+.new-grocery-list label {
+    display: block;
+
+    margin-bottom: 0.5rem;
+
+    font-weight: bold;
+}
+
+
+/*Makes the new grocery list input full width*/
+.new-grocery-list input {
+    width: 100%;
+
+    margin-top: 0.4rem;
+    padding: 0.75rem;
+
+    border: 0.0625rem solid #cccccc;
+    border-radius: 0.5rem;
+
+    font-family: inherit;
+    font-size: 1rem;
+}
+
+.dashboard-card > strong,
+.add-new-ingredient > strong,
+.new-grocery-list > strong{
+
+    display:block;
+    margin-bottom:1rem;
+    color:#2f5f35;
+    font-size:1.35rem;
+    font-weight:bold;
 }
