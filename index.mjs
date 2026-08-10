@@ -157,7 +157,6 @@ app.get('/pantry', requireLogin, async (req, res) => {
         WHERE pi.userId = ?
     `
     const [pantryItems] = await db.query(pantryItemsQuery, [id])
-    console.log(pantryItems)
     res.render('layout', {
         content: 'pantry',
         items: pantryItems
