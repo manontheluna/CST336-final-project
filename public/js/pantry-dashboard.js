@@ -1,5 +1,10 @@
 import { validatePantryItem } from './pantry-validation.js'
 import { calculateExpirationStatus } from './pantry-expiration.js'
+import {
+        filterPantryItems,
+        filterByExpirationStatus,
+        sortPantryItems
+    } from './pantry-list-utils.js'
 
 document.addEventListener('DOMContentLoaded', setupPantryDashboard)
 document.addEventListener('usda-food-selected', handleUsdaFoodSelected)
@@ -9,6 +14,7 @@ function setupPantryDashboard() {
 
     showExpirationStatuses()
     loadSelectedUsdaFood()
+    setupPantryControls()
 
     if (!pantryForm) {
         return
@@ -142,4 +148,72 @@ function loadSelectedUsdaFood() {
     if (nameField) {
         nameField.value = food.name
     }
+}
+
+function setupPantryControls() {
+    const searchInput = document.querySelector('#pantry-search')
+    const statusFilter = document.querySelector('#pantry-status-filter')
+    const sortSelect = document.querySelector('#pantry-sort')
+
+    if (searchInput) {
+        searchInput.addEventListener('input', updatePantryList)
+    }
+
+    if (statusFilter) {
+        statusFilter.addEventListener('change', updatePantryList)
+    }
+
+    if (sortSelect) {
+        sortSelect.addEventListener('change', updatePantryList)
+    }
+}
+
+function updatePantryList() {
+    const pantryList = document.querySelector('.pantry-items')
+
+    if (!pantryList) {
+        return
+    }
+
+    const searchInput = document.querySelector('#pantry-search')
+    const statusFilter = document.querySelector('#pantry-status-filter')
+    const sortSelect = document.querySelector('#pantry-sort')
+
+    const pantryItems = []
+
+    pantryList.querySelectorAll('li').forEach(element => {
+        const editButton = element.querySelector('.edit-pantry')
+
+        if (!editButton) {
+            return
+        }
+
+        const item = JSON.parse(editButton.dataset.ingredient)
+        item.element = element
+        pantryItems.push(item)
+    })
+
+    let results = filterPantryItems(
+        pantryItems,
+        searchInput ? searchInput.value : ''
+    )
+
+    results = filterByExpirationStatus(
+        results,
+        statusFilter ? statusFilter.value : 'all'
+    )
+
+    results = sortPantryItems(
+        results,
+        sortSelect ? sortSelect.value : ''
+    )
+
+    pantryItems.forEach(item => {
+        item.element.hidden = true
+    })
+
+    results.forEach(item => {
+        item.element.hidden = false
+        pantryList.appendChild(item.element)
+    })
 }
