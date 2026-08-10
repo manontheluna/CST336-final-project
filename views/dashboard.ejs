@@ -39,7 +39,7 @@
         <!-- Added dashboard-card class only for styling. -->
         <div class="pantry dashboard-card">
 
-            <strong>Pantry:</strong>
+            <strong>Expiring Soon:</strong>
 
             <ul class="pantry-items">
 
@@ -58,7 +58,9 @@
                             </span>
 
                             <span>
-                                <%= item.expirationDate %>
+                                <%= item.expirationDate
+                                    ? item.expirationDate.toLocaleDateString()
+                                    : 'No expiration date' %>
                             </span>
 
                             <button class="edit-pantry" data-type="pantry"
