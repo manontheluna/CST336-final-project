@@ -37,22 +37,24 @@
                     data-expiration="<%= item.expirationDate ? item.expirationDate.toISOString().split('T')[0] : '' %>">
                     <%= item.expirationDate ? item.expirationDate.toLocaleDateString() : 'No expiration date' %>
                 </small>
-                <button
-                    class="edit-pantry"
-                    data-type="pantry"
-                    data-ingredient='<%= JSON.stringify(item) %>'
-                >
-                    Edit
-                </button>
-                <form action="/ingredients/delete/<%= item.id %>" method="POST">
-                    <button>Delete</button>
-                </form>                
+                <div class="pantry-actions">
+                    <button
+                        class="edit-pantry"
+                        data-type="pantry"
+                        data-ingredient='<%= JSON.stringify(item) %>'
+                    >
+                        Edit
+                    </button>
+                    <form action="/ingredients/delete/<%= item.id %>" method="POST">
+                        <button>Delete</button>
+                    </form>   
+                </div>             
             </li>
         <% } %>
     </ul>
 
     <a href="/food-search">Search USDA Foods</a>
-    
+
     <div class="add-new-ingredient">
         Add/Update new ingredient
         <form id="ingredientForm" action="/ingredients/add" method="POST">

@@ -130,8 +130,15 @@ function showExpirationStatuses() {
         const status = typeof result === 'string' ? result : result.status
 
         const badge = document.createElement('span')
-        badge.textContent = status
-        badge.classList.add('expiration-status')
+        if (status === 'expiring-soon') {
+            badge.textContent = 'Expiring Soon'
+        } else if (status === 'fresh') {
+            badge.textContent = 'Fresh'
+        } else if (status === 'expired') {
+            badge.textContent = 'Expired'
+        }
+        
+        badge.classList.add('expiration-status', status)
 
         item.appendChild(badge)
     })
