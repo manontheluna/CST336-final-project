@@ -1,5 +1,5 @@
 import { validatePantryItem } from './pantry-validation.js'
-import { calculateExpirationStatus } from './pantry-expiration.js'
+import { calculateExpirationStatus } from './pantry-expiration.mjs'
 import {
         filterPantryItems,
         filterByExpirationStatus,
@@ -117,14 +117,16 @@ function handleUsdaFoodSelected(event) {
 }
 
 function showExpirationStatuses() {
-    document.querySelectorAll('.pantry-items li').forEach(item => {
-        const expirationText = item.querySelector('span:last-of-type')
+    document.querySelectorAll('.pantry > ul > li').forEach(item => {
+        const expirationText = item.querySelector('.expiration-date')
 
         if (!expirationText) {
             return
         }
 
-        const result = calculateExpirationStatus(expirationText.textContent)
+        const result = calculateExpirationStatus(
+            expirationText.dataset.expiration
+        )
         const status = typeof result === 'string' ? result : result.status
 
         const badge = document.createElement('span')
@@ -169,7 +171,7 @@ function setupPantryControls() {
 }
 
 function updatePantryList() {
-    const pantryList = document.querySelector('.pantry-items')
+    const pantryList = document.querySelector('.pantry > ul')
 
     if (!pantryList) {
         return

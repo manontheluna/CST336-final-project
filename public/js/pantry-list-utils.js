@@ -1,4 +1,4 @@
-import { calculateExpirationStatus } from './pantry-expiration.js'
+import { calculateExpirationStatus } from './pantry-expiration.mjs'
 
 export function filterPantryItems(items, searchText) {
     const query = String(searchText ?? '').trim().toLowerCase()
@@ -23,7 +23,8 @@ export function filterByExpirationStatus(items, status) {
 
     return items.filter(item => {
         const expirationDate = item.expirationDate ?? item.expiration
-        const result = calculateExpirationStatus(expirationDate)
+        const date = String(expirationDate).split('T')[0]
+        const result = calculateExpirationStatus(date)
         const itemStatus = typeof result === 'string' ? result : result.status
 
         return normalizeStatus(itemStatus) === selectedStatus
