@@ -6,6 +6,7 @@ import { db } from './db/db.mjs'
 import path from 'path'
 import { fileURLToPath } from 'url'
 
+import { calculateExpirationStatus } from './public/js/pantry-expiration.mjs'
 import { loginUser, registerUser } from './public/js/auth-api.mjs'
 
 const PORT = process.env.PORT || 3000
@@ -130,10 +131,35 @@ app.get('/dashboard', requireLogin, async (req, res) => {
     }
 
     const [items] = await db.query(pantryItems, [userId])
+    // give user overview of items that will expire soon
+    const expiringSoonItems = items.filter(item => {
+        // DB returns JS Date object, as such need to convert to just
+        // a YY/MM/DD format before feeding it to calculate expiration date
+        // algorithm
+        const date = item.expirationDate.toISOString().split('T')[0]
+        return calculateExpirationStatus(date).status === 'expiring-soon'
+    })
+
     res.render('layout', {
         content: 'dashboard',
-        pantryItems: items,
+        pantryItems: expiringSoonItems,
         groceries: lists
+    })
+})
+
+app.get('/pantry', requireLogin, async (req, res) => {
+    const id = req.session.user.id
+    const pantryItemsQuery = `
+        SELECT pi.id, i.name, pi.quantity, pi.unit, pi.expirationDate
+        FROM fp_pantry_items pi
+        JOIN fp_ingredients i
+            ON pi.ingredientId = i.id
+        WHERE pi.userId = ?
+    `
+    const [pantryItems] = await db.query(pantryItemsQuery, [id])
+    res.render('layout', {
+        content: 'pantry',
+        items: pantryItems
     })
 })
 

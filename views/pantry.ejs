@@ -1,0 +1,53 @@
+<div class="pantry">
+    <ul>
+        <% for (const item of items) { %>
+            <li>
+                <h3>
+                    <%= item.name %>
+                </h3>
+                <span>
+                    <%= item.quantity %>
+                </span>
+                <span>
+                    <%= item.unit %>
+                </span>
+                <small>
+                    <%= item.expirationDate %>
+                </small>
+                <button
+                    class="edit-pantry"
+                    data-type="pantry"
+                    data-ingredient='<%= JSON.stringify(item) %>'
+                >
+                    Edit
+                </button>
+                <form action="/ingredients/delete/<%= item.id %>" method="POST">
+                    <button>Delete</button>
+                </form>                
+            </li>
+        <% } %>
+    </ul>
+    <div class="add-new-ingredient">
+        Add/Update new ingredient
+        <form id="ingredientForm" action="/ingredients/add" method="POST">
+            <input type="hidden" name="_method">
+            <label>Name</label>
+            <input type="text" name="ingredientName" placeholder="Ingredient Name">
+            <label>Description</label>
+            <input type="text" name="description" placeholder="Ingredient Description">
+            <label>Quantity</label>
+            <input type="number" name="quantity" placeholder="Quantity">
+            <label>Unit</label>
+            <select name="unit">
+                <option value="block">block</option>
+                <option value="count">count</option>
+                <option value="lbs">lbs</option>
+                <option value="oz">oz</option>
+                <option value="gallons">gallons</option>
+            </select>
+            <label>Expiration Date</label>
+            <input type="date" name="expiration">
+            <button type="submit">Add</button>
+        </form>
+    </div>    
+</div>
