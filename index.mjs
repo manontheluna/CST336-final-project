@@ -385,11 +385,13 @@ app.put('/api/groceries/completed/:id', requireLogin, async (req, res) => {
 
 app.post('/api/grocery-items/add/', requireLogin, async (req, res) => {
     const { id: gListId, name, quantity, unit } = req.body
+    const normalizedName = name?.trim().toLowerCase()
     const ingredientQuery = `
         SELECT * FROM fp_ingredients
+        WHERE LOWER(name) = ?
     `
-    const [ingredients] = await db.query(ingredientQuery)
-    const existing = ingredients.find(ing => ing.name === name)
+    const [ingredients] = await db.query(ingredientQuery, [normalizedName])
+    const existing = ingredients.find(ing => ing.name.toLowerCase() === normalizedName)
     if (existing) {
         const id = existing.id
         const insertExistingQuery = `
@@ -402,14 +404,14 @@ app.post('/api/grocery-items/add/', requireLogin, async (req, res) => {
                 isPurchased
             ) VALUES (?, ?, ?, ?, ?, ?)
         `
-        await db.execute(insertExistingQuery, [gListId, id, name, quantity, unit, 0])
+        await db.execute(insertExistingQuery, [gListId, id, normalizedName, quantity, unit, 0])
     } else {
         // add non existent ingredient and grocery item
         // add to ingredient table
         const insertIngredientQuery = `
             INSERT INTO fp_ingredients (name) VALUES (?)
         `
-        const [ingredient] = await db.query(insertIngredientQuery, [name])
+        const [ingredient] = await db.query(insertIngredientQuery, [normalizedName])
         const ingId = ingredient.insertId
         // insert into grocery list
         const insertQuery = `
@@ -422,7 +424,7 @@ app.post('/api/grocery-items/add/', requireLogin, async (req, res) => {
                 isPurchased
             ) VALUES (?, ?, ?, ?, ?, ?)
         `
-        await db.execute(insertQuery, [gListId, ingId, name, quantity, unit, 0])
+        await db.execute(insertQuery, [gListId, ingId, normalizedName, quantity, unit, 0])
     }
     res.redirect('/dashboard')
 })

@@ -1,62 +1,43 @@
 <div class="dashboard">
-
-
     <!-- Wraps the user's name, email, and logout link
          so we can style the dashboard header. -->
     <div class="dashboard-header">
-
-
         <!-- Groups the user's name and email together. -->
         <div class="dashboard-user-info">
-
             <h1>
                 <%= user.firstName %>
                     <%= user.lastName %>
             </h1>
-
             <p>
                 <%= user.email %>
             </p>
-
         </div>
-
         <!-- Added class only for styling. -->
         <!-- Logout link -->
         <a class="dashboard-logout" href="/logout">
             Logout
         </a>
-
     </div>
     <!-- End dashboard-header -->
-
-
-
     <!-- This wrapper will control the overall dashboard layout. -->
     <div class="dashboard-grid">
-
-
-
         <!-- Added dashboard-card class only for styling. -->
         <div class="pantry dashboard-card dashboard-expiring">
-
             <div class="dashboard-section-heading">
                 <strong>Expiring Soon</strong>
                 <a href="/pantry">View all</a>
             </div>
-
             <ul class="pantry-items">
                 <% for (let item of expiringSoonItems) { %>
                     <li>
                         <div class="dashboard-expiring-info">
                             <strong><%= item.name %></strong>
-
                             <span>
                                 <%= item.expirationDate
                                     ? item.expirationDate.toLocaleDateString()
                                     : 'No expiration date' %>
                             </span>
                         </div>
-
                         <%
                             const expiration = new Date(item.expirationDate)
                             const today = new Date()
@@ -68,7 +49,6 @@
                                 (expiration - today) / (1000 * 60 * 60 * 24)
                             )
                         %>
-
                         <span class="dashboard-expiring-label">
                             <% if (daysLeft === 0) { %>
                                 Expires today
@@ -78,121 +58,85 @@
                                 <%= daysLeft %> days left
                             <% } %>
                         </span>
-
                     </li>
                 <% } %>
             </ul>
-
             <a class="dashboard-secondary-button" href="/pantry">
                 See all pantry items
             </a>
-
         </div>
-
-
         <!-- Existing ADD/UPDATE ingridient section
              Added dashboard-card class only for styling.
         -->
         <div class="dashboard-card dashboard-recipes">
-
             <div class="dashboard-section-heading">
                 <strong>Recipe Suggestions</strong>
                 <a href="/recipes">View all recipes</a>
             </div>
-
             <div
                 id="dashboard-recipe-data"
                 data-ingredients="<%= pantryItems.map(item => item.name).join(',') %>"
             ></div>
-
             <p id="dashboard-recipe-status">
                 Loading recipe suggestions...
             </p>
-
             <div
                 id="dashboard-recipe-results"
                 class="dashboard-recipe-grid">
             </div>
-
             <a class="dashboard-find-recipes" href="/recipes">
                 Find recipes with my ingredients
             </a>
-
         </div>
-
-
         <!-- Existing grocery section
              Added dashboard-card class only for styling.
         -->
         <div class="groceries dashboard-card">
-
             <strong>Grocery Lists</strong>
-
             <ul class="grocery-lists">
-
                 <% for(let item of groceries) { %>
-
                     <!-- 
                          Added grocery-list-card class only for styling.
                     -->
                     <li class="grocery-list-card">
-
                         <div>
-
                             <strong>
                                 <%= item.name %>
                             </strong>
-
                             <label>
                                 Completed:
-
                                 <input class="completed" type="checkbox" name="<%= item.id %>" <%=item.isCompleted
                                     ? 'checked' : '' %>
                                 >
-
                             </label>
-
                             <% for (let i of item.items) { %>
-
                                 <!-- 
                                      Added class only for styling.
                                 -->
                                 <div class="grocery-list-item">
-
                                     <%= i.name %>
-                                        <%= i.quantity %>
-                                            <%= i.unit %>
-
+                                    <%= i.quantity %>
+                                    <%= i.unit %>
                                 </div>
-
                                 <% } %>
-
                         </div>
-
-
                         <strong>Add New Item to List</strong>
-
                         <form action="/api/grocery-items/add/" method="POST">
-
-                            <input type="hidden" name="id" value="<%= item.id %>">
-
+                            <input
+                                type="hidden"
+                                name="id"
+                                value="<%= item.id %>"
+                            >
                             <label>
                                 Item Name
-
                                 <input type="text" name="name">
-
                             </label>
-
                             <label>
                                 Quantity
-
                                 <input type="number" name="quantity">
-
                             </label>
-
                             <label>
                                 Unit
-
                                 <select name="unit">
                                     <option value="block">block</option>
                                     <option value="count">count</option>
@@ -200,72 +144,46 @@
                                     <option value="oz">oz</option>
                                     <option value="gallons">gallons</option>
                                 </select>
-
                             </label>
-
                             <!-- 
                                  Added class only for styling.
                             -->
                             <button class="dashboard-primary-button">
                                 Add New List Item
                             </button>
-
                         </form>
-
-
                         <form action="/groceries/delete/<%= item.id %>" method="POST">
-
                             <!-- 
                                  Added class only for styling.
                             -->
                             <button class="dashboard-delete-button">
                                 Delete List
                             </button>
-
                         </form>
-
                     </li>
-
                     <% } %>
-
             </ul>
-
-
             <!-- 
                  Wrapper only for styling the add-new-list section.
             -->
             <div class="new-grocery-list">
-
                 <strong>Add New Grocery List</strong>
-
                 <form action="/groceries/add" method="POST">
-
                     <label for="name">
-
                         Grocery List Name
-
                         <input id="name" type="text" name="name">
-
                     </label>
-
                     <!-- 
                          Added class only for styling.
                     -->
                     <button class="dashboard-primary-button">
                         Add New Grocery List
                     </button>
-
                 </form>
-
             </div>
             <!-- End: new-grocery-list -->
-
-
         </div>
     </div>
     <!-- End: dashboard-grid -->
-
-
 </div>
-
 <script src="/js/dashboard-recipes.js" defer></script>
