@@ -1,16 +1,50 @@
 <section class="recipes-page">
-    <h1>Find Recipes</h1>
 
-    <form id="recipe-form">
-        <label for="recipe-search">Enter ingredients separated by commas:</label>
+    <!-- Recipe page introduction -->
+    <div class="recipes-header">
 
-        <input type="text" id="recipe-search" name="ingredients" placeholder="Example: chicken, rice, tomatoes">
+        <p class="recipes-label">Cook With What You Have</p>
 
-        <button type="submit">Search</button>
-    </form>
+        <h1>Find Recipes</h1>
 
-    <p id="recipe-message"></p>
-    <div id="recipe-results"></div>
+        <p class="recipes-description">Enter ingredients you already have and discover recipes you
+            can make with them.
+        </p>
+    </div>
+
+    <!-- Recipe search area -->
+
+    <div class="recipe-search-card">
+
+
+        <form id="recipe-form">
+            <label for="recipe-search">Enter ingredients separated by commas:</label>
+
+            <div class="recipe-search-row">
+
+                <input type="text" id="recipe-search" name="ingredients" placeholder="Example: chicken, rice, tomatoes">
+
+                <button class="recipe-search-button" type="submit">Search</button>
+            </div>
+        </form>
+
+        <!-- Displays loading, error, or no-results messages -->
+        <p id="recipe-message"></p>
+
+    </div>
+
+    <!-- Recipe results area -->
+    <section class="recipe-results-section">
+
+        <div class="recipe-results-heading">
+
+            <h2>Recipe Suggestions</h2>
+            <p>Results will appear here after you search.</p>
+        </div>
+
+        <div id="recipe-results"></div>
+    </section>
+
 </section>
 
 <script src="/js/storage.js" defer></script>
