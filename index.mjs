@@ -136,13 +136,21 @@ app.get('/dashboard', requireLogin, async (req, res) => {
         // DB returns JS Date object, as such need to convert to just
         // a YY/MM/DD format before feeding it to calculate expiration date
         // algorithm
-        const date = item.expirationDate.toISOString().split('T')[0]
+        let date = null
+
+        if (item.expirationDate) {
+            date = item.expirationDate.toISOString().split('T')[0]
+        }
         return calculateExpirationStatus(date).status === 'expiring-soon'
     })
 
+    expiringSoonItems.sort((a, b) =>
+        new Date(a.expirationDate) - new Date(b.expirationDate)
+    )
+
     res.render('layout', {
         content: 'dashboard',
-        pantryItems: expiringSoonItems,
+        pantryItems: items, expiringSoonItems,
         groceries: lists
     })
 })
