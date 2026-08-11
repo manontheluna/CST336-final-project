@@ -1,4 +1,25 @@
 <div class="pantry">
+    <div class="pantry-controls">
+        <input
+            type="search"
+            id="pantry-search"
+            placeholder="Search pantry"
+        >
+
+        <select id="pantry-status-filter">
+            <option value="all">All</option>
+            <option value="fresh">Fresh</option>
+            <option value="expiring-soon">Expiring Soon</option>
+            <option value="expired">Expired</option>
+        </select>
+
+        <select id="pantry-sort">
+            <option value="">Sort</option>
+            <option value="name-asc">Name</option>
+            <option value="expiration-asc">Expiration Date</option>
+        </select>
+    </div>
+
     <ul>
         <% for (const item of items) { %>
             <li>
@@ -11,22 +32,29 @@
                 <span>
                     <%= item.unit %>
                 </span>
-                <small>
-                    <%= item.expirationDate %>
+                <small
+                    class="expiration-date"
+                    data-expiration="<%= item.expirationDate ? item.expirationDate.toISOString().split('T')[0] : '' %>">
+                    <%= item.expirationDate ? item.expirationDate.toLocaleDateString() : 'No expiration date' %>
                 </small>
-                <button
-                    class="edit-pantry"
-                    data-type="pantry"
-                    data-ingredient='<%= JSON.stringify(item) %>'
-                >
-                    Edit
-                </button>
-                <form action="/ingredients/delete/<%= item.id %>" method="POST">
-                    <button>Delete</button>
-                </form>                
+                <div class="pantry-actions">
+                    <button
+                        class="edit-pantry"
+                        data-type="pantry"
+                        data-ingredient='<%= JSON.stringify(item) %>'
+                    >
+                        Edit
+                    </button>
+                    <form action="/ingredients/delete/<%= item.id %>" method="POST">
+                        <button>Delete</button>
+                    </form>   
+                </div>             
             </li>
         <% } %>
     </ul>
+
+    <a href="/food-search">Search USDA Foods</a>
+
     <div class="add-new-ingredient">
         Add/Update new ingredient
         <form id="ingredientForm" action="/ingredients/add" method="POST">
@@ -51,3 +79,5 @@
         </form>
     </div>    
 </div>
+
+<script type="module" src="/js/pantry-dashboard.js"></script>
