@@ -140,9 +140,13 @@ app.get('/dashboard', requireLogin, async (req, res) => {
         return calculateExpirationStatus(date).status === 'expiring-soon'
     })
 
+    expiringSoonItems.sort((a, b) =>
+        new Date(a.expirationDate) - new Date(b.expirationDate)
+    )
+
     res.render('layout', {
         content: 'dashboard',
-        pantryItems: expiringSoonItems,
+        pantryItems: items, expiringSoonItems,
         groceries: lists
     })
 })

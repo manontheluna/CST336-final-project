@@ -37,52 +37,55 @@
 
 
         <!-- Added dashboard-card class only for styling. -->
-        <div class="pantry dashboard-card">
+        <div class="pantry dashboard-card dashboard-expiring">
 
-            <strong>Expiring Soon:</strong>
+            <div class="dashboard-section-heading">
+                <strong>Expiring Soon</strong>
+                <a href="/pantry">View all</a>
+            </div>
 
             <ul class="pantry-items">
-
-                <% for(let item of pantryItems) { %>
-
+                <% for (let item of expiringSoonItems) { %>
                     <li>
-
-                        <%= item.name %>
-
-                            <span>
-                                <%= item.quantity %>
-                            </span>
-
-                            <span>
-                                <%= item.unit %>
-                            </span>
+                        <div class="dashboard-expiring-info">
+                            <strong><%= item.name %></strong>
 
                             <span>
                                 <%= item.expirationDate
                                     ? item.expirationDate.toLocaleDateString()
                                     : 'No expiration date' %>
                             </span>
+                        </div>
 
-                            <button class="edit-pantry" data-type="pantry"
-                                data-ingredient='<%= JSON.stringify(item) %>'>
-                                Edit
-                            </button>
+                        <%
+                            const expiration = new Date(item.expirationDate)
+                            const today = new Date()
 
-                            <form action="/ingredients/delete/<%= item.id %>" method="POST">
+                            expiration.setHours(0, 0, 0, 0)
+                            today.setHours(0, 0, 0, 0)
 
+                            const daysLeft = Math.ceil(
+                                (expiration - today) / (1000 * 60 * 60 * 24)
+                            )
+                        %>
 
-                                <!-- Added class only for styling. -->
-                                <button class="dashboard-delete-button">
-                                    Delete
-                                </button>
-
-                            </form>
+                        <span class="dashboard-expiring-label">
+                            <% if (daysLeft === 0) { %>
+                                Expires today
+                            <% } else if (daysLeft === 1) { %>
+                                1 day left
+                            <% } else { %>
+                                <%= daysLeft %> days left
+                            <% } %>
+                        </span>
 
                     </li>
-
-                    <% } %>
-
+                <% } %>
             </ul>
+
+            <a class="dashboard-secondary-button" href="/pantry">
+                See all pantry items
+            </a>
 
         </div>
 
@@ -90,48 +93,30 @@
         <!-- Existing ADD/UPDATE ingridient section
              Added dashboard-card class only for styling.
         -->
-        <div class="add-new-ingredient dashboard-card">
+        <div class="dashboard-card dashboard-recipes">
 
-            Add/Update new ingredient
+            <div class="dashboard-section-heading">
+                <strong>Recipe Suggestions</strong>
+                <a href="/recipes">View all recipes</a>
+            </div>
 
-            <form id="ingredientForm" action="/ingredients/add" method="POST">
+            <div
+                id="dashboard-recipe-data"
+                data-ingredients="<%= pantryItems.map(item => item.name).join(',') %>"
+            ></div>
 
-                <input type="hidden" name="_method">
+            <p id="dashboard-recipe-status">
+                Loading recipe suggestions...
+            </p>
 
-                <label>Name</label>
+            <div
+                id="dashboard-recipe-results"
+                class="dashboard-recipe-grid">
+            </div>
 
-                <input type="text" name="ingredientName" placeholder="Ingredient Name">
-
-                <label>Description</label>
-
-                <input type="text" name="description" placeholder="Ingredient Description">
-
-                <label>Quantity</label>
-
-                <input type="number" name="quantity" placeholder="Quantity">
-
-                <label>Unit</label>
-
-                <select name="unit">
-                    <option value="block">block</option>
-                    <option value="count">count</option>
-                    <option value="lbs">lbs</option>
-                    <option value="oz">oz</option>
-                    <option value="gallons">gallons</option>
-                </select>
-
-                <label>Expiration Date</label>
-
-                <input type="date" name="expiration">
-
-
-                <!-- Added class only for styling. -->
-
-                <button class="dashboard-primary-button" type="submit">
-                    Add
-                </button>
-
-            </form>
+            <a class="dashboard-find-recipes" href="/recipes">
+                Find recipes with my ingredients
+            </a>
 
         </div>
 
@@ -282,3 +267,5 @@
 
 
 </div>
+
+<script src="/js/dashboard-recipes.js" defer></script>
