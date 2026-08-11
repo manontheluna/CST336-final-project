@@ -86,7 +86,7 @@ app.get('/logout', (req, res) => {
     })
 })
 
-app.get('/register', (req, res) => {
+app.get('/register', requireGuest, (req, res) => {
     res.render('layout', {
         content: 'register'
     })
