@@ -230,11 +230,9 @@ app.get('/recipes', (req, res) => {
 
 // Get saved recipes for the logged-in user
 app.get('/api/saved-recipes', requireLogin, async (req, res) => {
-
     const userId = req.session.user.id
 
     try {
-
         const query =
             `SELECT
                 f.id AS favoriteId,
@@ -256,9 +254,7 @@ app.get('/api/saved-recipes', requireLogin, async (req, res) => {
         const [savedRecipes] = await db.query(query, [userId])
 
         res.send(savedRecipes)
-
     } catch (error) {
-
         console.error('Saved recipes could not be loaded:', error)
 
         res.status(500).send({
@@ -269,11 +265,9 @@ app.get('/api/saved-recipes', requireLogin, async (req, res) => {
 
 // Display the logged-in user's saved recipes
 app.get('/saved-recipes', requireLogin, async (req, res) => {
-
     const userId = req.session.user.id
 
     try {
-
         const query =
             `SELECT
                 f.id AS favoriteId,
@@ -296,7 +290,6 @@ app.get('/saved-recipes', requireLogin, async (req, res) => {
 
         // Get the ingredients for each saved recipe
         for (const recipe of savedRecipes) {
-
             const ingredientQuery =
                 `SELECT
             i.name,
@@ -318,11 +311,9 @@ app.get('/saved-recipes', requireLogin, async (req, res) => {
 
         res.render('layout', {
             content: 'saved-recipes',
-            savedRecipes: savedRecipes
+            savedRecipes
         })
-
     } catch (error) {
-
         console.error('Saved recipes page could not be loaded:', error)
 
         res.status(500).send('Saved recipes could not be loaded.')
@@ -331,12 +322,10 @@ app.get('/saved-recipes', requireLogin, async (req, res) => {
 
 // Remove a recipe from the logged-in user's saved recipes
 app.post('/saved-recipes/delete/:id', requireLogin, async (req, res) => {
-
     const favoriteId = req.params.id
     const userId = req.session.user.id
 
     try {
-
         await db.execute(
             `DELETE FROM fp_favorites
              WHERE id = ? AND userId = ?`,
@@ -344,9 +333,7 @@ app.post('/saved-recipes/delete/:id', requireLogin, async (req, res) => {
         )
 
         res.redirect('/saved-recipes')
-
     } catch (error) {
-
         console.error('Saved recipe could not be removed:', error)
 
         res.status(500).send('Saved recipe could not be removed.')
@@ -390,11 +377,9 @@ app.get('/api/spoonacular-recipes', async (req, res) => {
 
 // Get full information for one Spoonacular recipe
 app.get('/api/spoonacular-recipe/:id', requireLogin, async (req, res) => {
-
     const recipeId = req.params.id
 
     try {
-
         const url =
             `https://api.spoonacular.com/recipes/${recipeId}/information` +
             `?apiKey=${process.env.SPOONACULAR_API_KEY}`
@@ -408,9 +393,7 @@ app.get('/api/spoonacular-recipe/:id', requireLogin, async (req, res) => {
         }
 
         res.send(recipe)
-
     } catch (error) {
-
         console.error('Spoonacular recipe details request failed:', error)
 
         res.status(500).send({
@@ -421,12 +404,10 @@ app.get('/api/spoonacular-recipe/:id', requireLogin, async (req, res) => {
 
 // Save a Spoonacular recipe for the logged-in user
 app.post('/api/saved-recipes/:id', requireLogin, async (req, res) => {
-
     const spoonacularId = req.params.id
     const userId = req.session.user.id
 
     try {
-
         // Get the full recipe information from Spoonacular
         const url =
             `https://api.spoonacular.com/recipes/${spoonacularId}/information` +
@@ -449,7 +430,6 @@ app.post('/api/saved-recipes/:id', requireLogin, async (req, res) => {
         )
 
         if (existingRecipes.length > 0) {
-
             const recipeId = existingRecipes[0].id
 
             // Check whether the recipe is already in this user's favorites
@@ -462,7 +442,6 @@ app.post('/api/saved-recipes/:id', requireLogin, async (req, res) => {
 
             // Add it to favorites only if it is not already there
             if (existingFavorite.length === 0) {
-
                 await db.execute(
                     `INSERT INTO fp_favorites 
             (userId, recipeId)
@@ -474,7 +453,7 @@ app.post('/api/saved-recipes/:id', requireLogin, async (req, res) => {
             return res.send({
                 success: true,
                 message: 'Recipe saved successfully.',
-                recipeId: recipeId
+                recipeId
             })
         }
 
@@ -510,7 +489,6 @@ app.post('/api/saved-recipes/:id', requireLogin, async (req, res) => {
 
         // Save each ingredient from the Spoonacular recipe
         for (const ingredient of recipe.extendedIngredients) {
-
             // Check if this ingredient already exists
             const [existingIngredients] = await db.execute(
                 `SELECT id
@@ -522,12 +500,9 @@ app.post('/api/saved-recipes/:id', requireLogin, async (req, res) => {
             let ingredientId
 
             if (existingIngredients.length > 0) {
-
                 // Use the ingredient that is already in the database
                 ingredientId = existingIngredients[0].id
-
             } else {
-
                 // Add the new ingredient to the database
                 const [ingredientResult] = await db.execute(
                     `INSERT INTO fp_ingredients (name)
@@ -562,7 +537,6 @@ app.post('/api/saved-recipes/:id', requireLogin, async (req, res) => {
 
         // Add it only if it is not already saved
         if (existingFavorite.length === 0) {
-
             await db.execute(
                 `INSERT INTO fp_favorites
          (userId, recipeId)
@@ -574,11 +548,9 @@ app.post('/api/saved-recipes/:id', requireLogin, async (req, res) => {
         res.send({
             success: true,
             message: 'Recipe saved successfully.',
-            recipeId: recipeId
+            recipeId
         })
-
     } catch (error) {
-
         console.error('Save recipe request failed:', error)
 
         res.status(500).send({
