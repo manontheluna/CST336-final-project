@@ -1,0 +1,89 @@
+<section class="saved-recipes-page">
+
+    <div class="saved-recipes-header">
+
+        <h1>Saved Recipes</h1>
+
+        <p>
+            View the recipes you saved and want to cook again.
+        </p>
+
+    </div>
+
+
+    <div class="saved-recipes-grid">
+
+        <% for (let recipe of savedRecipes) { %>
+
+            <article class="saved-recipe-card">
+
+                <h2>
+                    <%= recipe.title %>
+                </h2>
+
+                <div class="saved-recipe-content">
+
+                    <div class="saved-recipe-details">
+
+                        <p>
+                            Cook Time:
+                            <%= recipe.cookTime %> minutes
+                        </p>
+
+                        <p>
+                            Servings:
+                            <%= recipe.servings %>
+                        </p>
+
+                    </div>
+
+                    <% if (recipe.ingredients.length> 0) { %>
+
+                        <div class="saved-recipe-ingredients">
+
+                            <strong>Ingredients</strong>
+
+                            <ul>
+
+                                <% for (let ingredient of recipe.ingredients) { %>
+
+                                    <li>
+                                        <%= ingredient.quantity %>
+                                            <%= ingredient.unit %>
+                                                <%= ingredient.name %>
+                                    </li>
+
+                                    <% } %>
+
+                            </ul>
+
+                        </div>
+
+                        <% } %>
+
+                            <div class="saved-recipe-instructions">
+
+                                <strong>How to Make It</strong>
+
+                                <p>
+                                    <%= recipe.instructions.replace(/<[^>]*>/g, '') %>
+                                </p>
+
+                            </div>
+                </div>
+
+                <form action="/saved-recipes/delete/<%= recipe.favoriteId %>" method="POST">
+
+                    <button class="remove-saved-recipe-button" type="submit">
+                        Remove Saved Recipe
+                    </button>
+
+                </form>
+
+            </article>
+
+            <% } %>
+
+    </div>
+
+</section>

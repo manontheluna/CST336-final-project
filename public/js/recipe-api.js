@@ -3,10 +3,11 @@ let recipeForm
 let recipeSearch
 let recipeMessage
 let recipeResults
+let savedRecipeTitles = new Set()
 
 document.addEventListener('DOMContentLoaded', initializeRecipePage)
 
-function initializeRecipePage() {
+async function initializeRecipePage() {
     recipeForm = document.querySelector('#recipe-form')
     recipeSearch = document.querySelector('#recipe-search')
     recipeMessage = document.querySelector('#recipe-message')
@@ -16,8 +17,33 @@ function initializeRecipePage() {
         console.error('Recipe form was not found.')
         return
     }
-
+    await loadSavedRecipes()
     recipeForm.addEventListener('submit', handleRecipeSearch)
+}
+
+async function loadSavedRecipes() {
+
+    try {
+
+        const response = await fetch('/api/saved-recipes')
+
+        // User may not be logged in
+        if (!response.ok || response.redirected) {
+            return
+        }
+
+        const savedRecipes = await response.json()
+
+        savedRecipeTitles = new Set(
+            savedRecipes.map(function (recipe) {
+                return recipe.title
+            })
+        )
+
+    } catch (error) {
+
+        console.error('Saved recipes could not be checked:', error)
+    }
 }
 
 async function handleRecipeSearch(event) {
@@ -45,8 +71,8 @@ async function handleRecipeSearch(event) {
         showMessage('')
         displayRecipes(recipes)
 
-    } catch(error) {
-        console.error('Recipe search error:', error) 
+    } catch (error) {
+        console.error('Recipe search error:', error)
         showMessage('Recipes could not be loaded. Please try again.')
     }
 }
@@ -104,9 +130,63 @@ function displayRecipes(recipes) {
         const instructions = document.createElement('p')
         instructions.textContent = recipe.instructions
 
-        card.append(title, image, category, instructions)
+        // Button used to save recipe
+        const saveButton = document.createElement('button')
+        saveButton.classList.add('save-recipe-button')
+
+        // Check if this recipe has already been saved
+        if (savedRecipeTitles.has(recipe.name)) {
+
+            saveButton.textContent = 'Saved'
+            saveButton.disabled = true
+
+        } else {
+
+            saveButton.textContent = 'Save Recipe'
+
+            saveButton.addEventListener('click', function () {
+                saveRecipe(recipe.id, recipe.name, saveButton)
+            })
+        }
+
+        card.append(title, image, category, instructions, saveButton)
         recipeResults.appendChild(card)
     })
+}
+
+async function saveRecipe(recipeId, recipeName, button) {
+    button.disabled = true
+    button.textContent = 'Saving...'
+
+    try {
+
+        const response = await fetch(
+            `/api/saved-recipes/${recipeId}`,
+            {
+                method: 'POST'
+            }
+        )
+
+        const data = await response.json()
+
+        if (!response.ok) {
+            button.textContent = 'Could Not Save'
+            button.disabled = false
+            return
+        }
+
+        button.textContent = 'Saved'
+        button.disabled = true
+
+        savedRecipeTitles.add(recipeName)
+
+    } catch (error) {
+
+        console.error('Save recipe error:', error)
+
+        button.textContent = 'Could Not Save'
+        button.disabled = false
+    }
 }
 
 function showMessage(message) {

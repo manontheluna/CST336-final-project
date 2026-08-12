@@ -228,6 +228,131 @@ app.get('/recipes', (req, res) => {
     })
 })
 
+// Get saved recipes for the logged-in user
+app.get('/api/saved-recipes', requireLogin, async (req, res) => {
+
+    const userId = req.session.user.id
+
+    try {
+
+        const query =
+            `SELECT
+                f.id AS favoriteId,
+                r.id AS recipeId,
+                r.title,
+                r.description,
+                r.instructions,
+                r.prepTime,
+                r.cookTime,
+                r.servings,
+                f.dateCreated
+            FROM fp_favorites f
+            JOIN fp_recipes r
+                ON f.recipeId = r.id
+            WHERE f.userId = ?
+            ORDER BY f.dateCreated DESC
+        `
+
+        const [savedRecipes] = await db.query(query, [userId])
+
+        res.send(savedRecipes)
+
+    } catch (error) {
+
+        console.error('Saved recipes could not be loaded:', error)
+
+        res.status(500).send({
+            error: 'Saved recipes could not be loaded.'
+        })
+    }
+})
+
+// Display the logged-in user's saved recipes
+app.get('/saved-recipes', requireLogin, async (req, res) => {
+
+    const userId = req.session.user.id
+
+    try {
+
+        const query =
+            `SELECT
+                f.id AS favoriteId,
+                r.id AS recipeId,
+                r.title,
+                r.description,
+                r.instructions,
+                r.prepTime,
+                r.cookTime,
+                r.servings,
+                f.dateCreated
+            FROM fp_favorites f
+            JOIN fp_recipes r
+                ON f.recipeId = r.id
+            WHERE f.userId = ?
+            ORDER BY f.dateCreated DESC
+        `
+
+        const [savedRecipes] = await db.query(query, [userId])
+
+        // Get the ingredients for each saved recipe
+        for (const recipe of savedRecipes) {
+
+            const ingredientQuery =
+                `SELECT
+            i.name,
+            ri.quantity,
+            ri.unit
+        FROM fp_recipe_ingredients ri
+        JOIN fp_ingredients i
+            ON ri.ingredientId = i.id
+        WHERE ri.recipeId = ?
+    `
+
+            const [ingredients] = await db.query(
+                ingredientQuery,
+                [recipe.recipeId]
+            )
+
+            recipe.ingredients = ingredients
+        }
+
+        res.render('layout', {
+            content: 'saved-recipes',
+            savedRecipes: savedRecipes
+        })
+
+    } catch (error) {
+
+        console.error('Saved recipes page could not be loaded:', error)
+
+        res.status(500).send('Saved recipes could not be loaded.')
+    }
+})
+
+// Remove a recipe from the logged-in user's saved recipes
+app.post('/saved-recipes/delete/:id', requireLogin, async (req, res) => {
+
+    const favoriteId = req.params.id
+    const userId = req.session.user.id
+
+    try {
+
+        await db.execute(
+            `DELETE FROM fp_favorites
+             WHERE id = ? AND userId = ?`,
+            [favoriteId, userId]
+        )
+
+        res.redirect('/saved-recipes')
+
+    } catch (error) {
+
+        console.error('Saved recipe could not be removed:', error)
+
+        res.status(500).send('Saved recipe could not be removed.')
+    }
+})
+
 app.get('/api/spoonacular-recipes', async (req, res) => {
     const ingredients = req.query.ingredients
 
@@ -259,6 +384,205 @@ app.get('/api/spoonacular-recipes', async (req, res) => {
 
         res.status(500).send({
             error: 'Recipes could not be loaded.'
+        })
+    }
+})
+
+// Get full information for one Spoonacular recipe
+app.get('/api/spoonacular-recipe/:id', requireLogin, async (req, res) => {
+
+    const recipeId = req.params.id
+
+    try {
+
+        const url =
+            `https://api.spoonacular.com/recipes/${recipeId}/information` +
+            `?apiKey=${process.env.SPOONACULAR_API_KEY}`
+
+        const response = await fetch(url)
+
+        const recipe = await response.json()
+
+        if (!response.ok) {
+            return res.status(response.status).send(recipe)
+        }
+
+        res.send(recipe)
+
+    } catch (error) {
+
+        console.error('Spoonacular recipe details request failed:', error)
+
+        res.status(500).send({
+            error: 'Recipe details could not be loaded.'
+        })
+    }
+})
+
+// Save a Spoonacular recipe for the logged-in user
+app.post('/api/saved-recipes/:id', requireLogin, async (req, res) => {
+
+    const spoonacularId = req.params.id
+    const userId = req.session.user.id
+
+    try {
+
+        // Get the full recipe information from Spoonacular
+        const url =
+            `https://api.spoonacular.com/recipes/${spoonacularId}/information` +
+            `?apiKey=${process.env.SPOONACULAR_API_KEY}`
+
+        const response = await fetch(url)
+
+        const recipe = await response.json()
+
+        if (!response.ok) {
+            return res.status(response.status).send(recipe)
+        }
+
+        // Check whether this user already saved this recipe
+        const [existingRecipes] = await db.execute(
+            `SELECT id
+     FROM fp_recipes
+     WHERE userId = ? AND title = ?`,
+            [userId, recipe.title]
+        )
+
+        if (existingRecipes.length > 0) {
+
+            const recipeId = existingRecipes[0].id
+
+            // Check whether the recipe is already in this user's favorites
+            const [existingFavorite] = await db.execute(
+                `SELECT id
+         FROM fp_favorites
+         WHERE userId = ? AND recipeId = ?`,
+                [userId, recipeId]
+            )
+
+            // Add it to favorites only if it is not already there
+            if (existingFavorite.length === 0) {
+
+                await db.execute(
+                    `INSERT INTO fp_favorites 
+            (userId, recipeId)
+             VALUES (?, ?)`,
+                    [userId, recipeId]
+                )
+            }
+
+            return res.send({
+                success: true,
+                message: 'Recipe saved successfully.',
+                recipeId: recipeId
+            })
+        }
+
+        // Add the recipe to our local recipes table
+        const insertRecipe = `
+    INSERT INTO fp_recipes
+    (
+        userId,
+        categoryId,
+        title,
+        description,
+        instructions,
+        prepTime,
+        cookTime,
+        servings
+    )
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+`
+
+        const [result] = await db.execute(insertRecipe, [
+            userId,
+            null,
+            recipe.title,
+            'Saved from Spoonacular',
+            recipe.instructions,
+            null,
+            recipe.readyInMinutes,
+            recipe.servings
+        ])
+
+        // Get the ID of the recipe we just added
+        const recipeId = result.insertId
+
+        // Save each ingredient from the Spoonacular recipe
+        for (const ingredient of recipe.extendedIngredients) {
+
+            // Check if this ingredient already exists
+            const [existingIngredients] = await db.execute(
+                `SELECT id
+         FROM fp_ingredients
+         WHERE name = ?`,
+                [ingredient.name]
+            )
+
+            let ingredientId
+
+            if (existingIngredients.length > 0) {
+
+                // Use the ingredient that is already in the database
+                ingredientId = existingIngredients[0].id
+
+            } else {
+
+                // Add the new ingredient to the database
+                const [ingredientResult] = await db.execute(
+                    `INSERT INTO fp_ingredients (name)
+             VALUES (?)`,
+                    [ingredient.name]
+                )
+
+                ingredientId = ingredientResult.insertId
+            }
+
+            // Connect the ingredient to this recipe
+            await db.execute(
+                `INSERT INTO fp_recipe_ingredients
+         (recipeId, ingredientId, quantity, unit)
+         VALUES (?, ?, ?, ?)`,
+                [
+                    recipeId,
+                    ingredientId,
+                    ingredient.amount,
+                    ingredient.unit
+                ]
+            )
+        }
+
+        // Check whether this recipe is already in the user's favorites
+        const [existingFavorite] = await db.execute(
+            `SELECT id
+     FROM fp_favorites
+     WHERE userId = ? AND recipeId = ?`,
+            [userId, recipeId]
+        )
+
+        // Add it only if it is not already saved
+        if (existingFavorite.length === 0) {
+
+            await db.execute(
+                `INSERT INTO fp_favorites
+         (userId, recipeId)
+         VALUES (?, ?)`,
+                [userId, recipeId]
+            )
+        }
+
+        res.send({
+            success: true,
+            message: 'Recipe saved successfully.',
+            recipeId: recipeId
+        })
+
+    } catch (error) {
+
+        console.error('Save recipe request failed:', error)
+
+        res.status(500).send({
+            error: 'Recipe could not be saved.'
         })
     }
 })
